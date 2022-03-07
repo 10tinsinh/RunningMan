@@ -35,18 +35,7 @@ namespace RunningMan.Controllers
             }
         }
 
-        //[HttpGet]
-        //public IActionResult GetALL()
-        //{
-        //    try
-        //    {
-        //        return Ok(_accountRepository.GetAll());
-        //    }
-        //    catch
-        //    {
-        //        return BadRequest();
-        //    }
-        //}
+     
         [HttpGet("{id}")]
         public IActionResult getbyid(int id)
         {
