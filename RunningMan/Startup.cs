@@ -35,14 +35,15 @@ namespace RunningMan
         {
 
             services.AddControllers();
+            services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAccountRepository, AccountRepository>();
 
-            services.Configure<AppSetting>(Configuration.GetSection("AppSettings"));
+            
 
             services.AddDbContext<MyDbContext>(option => {
                 option.UseSqlServer(Configuration.GetConnectionString("MyDB"));
             });
-
+            services.Configure<AppSetting>(Configuration.GetSection("AppSettings"));
             var secretKey = Configuration["AppSettings:SecretKey"];
             var secretKeyBytes = Encoding.UTF8.GetBytes(secretKey);
 

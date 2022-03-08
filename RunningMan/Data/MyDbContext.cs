@@ -9,7 +9,8 @@ namespace RunningMan.Data
     public class MyDbContext:DbContext
     {
         public MyDbContext(DbContextOptions options): base(options) { }
-
+       
+        public DbSet<User> Users { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<Account> Accounts { get; set; }
         public DbSet<AccountType> accountTypes { get; set; }
