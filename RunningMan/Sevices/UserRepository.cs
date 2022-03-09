@@ -57,7 +57,7 @@ namespace RunningMan.Sevices
             throw new NotImplementedException();
         }
 
-        public ApiResponse Login(UserModel user)
+        public ApiResponse Login(UserDTO user)
         {
             var _user = _Context.Users.SingleOrDefault(u => u.Username == user.Username && u.Password == user.Password);
             if(_user == null)

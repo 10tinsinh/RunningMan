@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RunningMan.Models
 {
-    public class UserModel
+    public class UserDTO
     {
         [Required]
         [MaxLength(50)]
@@ -16,7 +16,7 @@ namespace RunningMan.Models
         public string Password { get; set; }
     }
 
-    public class UserModelAllField:UserModel
+    public class UserModelAllField:UserDTO
     {
         [Required]
         [MaxLength(100)]

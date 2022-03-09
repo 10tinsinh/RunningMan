@@ -9,7 +9,7 @@ namespace RunningMan.Sevices
     public interface IUserRepository
     {
         UserId CreateUser(UserModelAllField user);
-        ApiResponse Login(UserModel user);
+        ApiResponse Login(UserDTO user);
 
         List<UserId> GetUses(string search);
     }
