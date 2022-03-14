@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RunningManApi.DTO.Models;
 using RunningManApi.Service;
@@ -65,6 +66,7 @@ namespace RunningManApi.Controllers
             }
         }
         [HttpDelete]
+        [Authorize]
         public IActionResult DeleteAccount(int id)
         {
             
@@ -87,6 +89,7 @@ namespace RunningManApi.Controllers
             }
         }
         [HttpPut]
+        [Authorize]
         public IActionResult UpdateAccount(int id, AccountDTO account)
         {
 
