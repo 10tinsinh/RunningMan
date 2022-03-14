@@ -5,15 +5,23 @@ using System.Linq;
 using System.Threading.Tasks;
 using RunningManApi.Repository;
 using RunningManApi.Repository.Entites;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 
 namespace RunningManApi.Service
 {
     public class AccountRepository : IAccountRepository
     {
         private Repository.UserDataAccess account;
-        public AccountRepository()
+        private readonly AppSetting _appSetting;
+
+        public AccountRepository( IOptionsMonitor<AppSetting> optionsMonitor)
         {
             account = new UserDataAccess();
+            _appSetting = optionsMonitor.CurrentValue;
         }
 
         public AccountIdDTO CreateAccount(AccountDTO user)
@@ -66,5 +74,52 @@ namespace RunningManApi.Service
             return User.ToList();
         }
 
+        public ApiResponse Login(Login login)
+        {
+            var checkUser = account.GetAccount().SingleOrDefault(us => us.UserName == login.UserName && us.PassWord == login.PassWord);
+            if (checkUser == null)
+            {
+                var result = new ApiResponse
+                {
+                    Success = false,
+                    Message = "Username or Password invalid",
+                    Data = null
+                };
+                return result;
+            }
+            else 
+            { 
+                var result = new ApiResponse
+                {
+                    Success = true,
+                    Message = "Loggin successfully",
+                    Data = GenerateToken(checkUser)
+                };
+                return result; 
+            }
+        }
+
+        private string GenerateToken(Account account)
+        {
+            var jwtToken = new JwtSecurityTokenHandler();
+            var secretKeyBytes = Encoding.UTF8.GetBytes(_appSetting.SecretKey);
+            var jwtTokenDescription = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[]
+                {
+                    new Claim (ClaimTypes.Name, account.Name),
+                    new Claim (ClaimTypes.Email, account.Email),
+                    new Claim ("Username", account.UserName),
+                    new Claim ("Id", account.Id.ToString()),
+                    new Claim ("AccountStatus", account.AccountStatus.ToString()),
+
+                }),
+                Expires = DateTime.UtcNow.AddMinutes(1),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytes), SecurityAlgorithms.HmacSha512Signature)
+
+            };
+            var token = jwtToken.CreateToken(jwtTokenDescription);
+            return jwtToken.WriteToken(token);
+        }
     }
 }

@@ -11,5 +11,7 @@ namespace RunningManApi.Service
         List<AccountIdDTO> GetAllAccount( string search);
 
         AccountIdDTO CreateAccount(AccountDTO account);
+
+        ApiResponse Login(Login login);
     }
 }

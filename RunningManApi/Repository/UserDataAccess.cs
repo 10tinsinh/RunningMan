@@ -10,10 +10,19 @@ namespace RunningManApi.Repository
 {
     public class UserDataAccess
     {
-   
+        //private readonly MyDbContext dataBase;
+
+        //public UserDataAccess(MyDbContext myDbContext)
+        //{
+        //    dataBase = myDbContext;
+        //}
+        //public UserDataAccess() { }
+
+
         public List<Account> GetAccount()
         {
             var dataBase = new MyDbContext();
+            
             var account = dataBase.Accounts.Select(ac => new Account
             {
                 Id = ac.Id,

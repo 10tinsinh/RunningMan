@@ -44,6 +44,23 @@ namespace RunningManApi.Controllers
             }
             catch
             {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Username had exist"
+                });
+            }
+        }
+
+        [HttpPost("Login")]
+        public IActionResult Login(Login login)
+        {
+            try
+            {
+                return Ok(_accountRepository.Login(login));
+            }
+            catch
+            {
                 return BadRequest();
             }
         }
