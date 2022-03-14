@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RunningManApi.DTO.Models;
 using RunningManApi.Service;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,20 @@ namespace RunningManApi.Controllers
             try
             {
                 var result = _accountRepository.GetAllAccount(search);
+                return Ok(result);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+        
+        [HttpPost]
+        public IActionResult CreateNewAccount(AccountDTO account)
+        {
+            try
+            {
+                var result = _accountRepository.CreateAccount(account);
                 return Ok(result);
             }
             catch

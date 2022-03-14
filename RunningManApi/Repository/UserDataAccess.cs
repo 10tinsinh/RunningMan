@@ -25,5 +25,21 @@ namespace RunningManApi.Repository
             });
             return account.ToList();
         }
+        public void CreateAccount(Account account)
+        {
+            var dataBase = new MyDbContext();
+            var _account = new Account
+            {
+
+                UserName = account.UserName,
+                PassWord = account.PassWord,
+                Name = account.Name,
+                Email = account.Email,
+                AccountStatus = account.AccountStatus
+            };
+            dataBase.Add(_account);
+            dataBase.SaveChanges();
+
+        }
     }
 }

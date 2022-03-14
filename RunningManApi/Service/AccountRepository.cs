@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using RunningManApi.Repository;
+using RunningManApi.Repository.Entites;
 
 namespace RunningManApi.Service
 {
@@ -14,6 +15,36 @@ namespace RunningManApi.Service
         {
             account = new UserDataAccess();
         }
+
+        public AccountIdDTO CreateAccount(AccountDTO user)
+        {
+            var checkUser = account.GetAccount().SingleOrDefault(us => us.UserName == user.UserName);
+            if(checkUser != null)
+            {
+                throw new Exception("User invalid");
+            }
+
+            var addAccount = new Account
+            {
+                UserName = user.UserName,
+                PassWord = user.PassWord,
+                Name = user.Name,
+                Email = user.Email,
+                AccountStatus = true
+            };
+            account.CreateAccount(addAccount);
+            return new AccountIdDTO
+            {
+                
+                UserName = addAccount.UserName,
+                PassWord = addAccount.PassWord,
+                Name = addAccount.Name,
+                Email = addAccount.Email,
+                AccountStatus = addAccount.AccountStatus
+            };
+            
+        }
+
         public List<AccountIdDTO> GetAllAccount(string search)
         {
             var checkUser = account.GetAccount().AsQueryable();
@@ -34,5 +65,6 @@ namespace RunningManApi.Service
             });
             return User.ToList();
         }
+
     }
 }
