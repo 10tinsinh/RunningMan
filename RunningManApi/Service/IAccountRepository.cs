@@ -13,5 +13,9 @@ namespace RunningManApi.Service
         AccountIdDTO CreateAccount(AccountDTO account);
 
         ApiResponse Login(Login login);
+
+        void Update(int id, AccountDTO account);
+
+        void Delete(int id);
     }
 }

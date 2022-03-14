@@ -50,5 +50,29 @@ namespace RunningManApi.Repository
             dataBase.SaveChanges();
 
         }
+        public void DeleteAccount(int id)
+        {
+            var dataBase = new MyDbContext();
+            var account = dataBase.Accounts.SingleOrDefault(ac => ac.Id == id);
+            if(account != null)
+            {
+                dataBase.Remove(account);
+                dataBase.SaveChanges();
+            }    
+        }
+
+        public void UpdateAccount(int id,Account account)
+        {
+            var dataBase = new MyDbContext();
+            var _account = dataBase.Accounts.SingleOrDefault(ac => ac.Id == id);
+            if (account != null)
+            {
+                _account.UserName = account.UserName;
+                _account.PassWord = account.PassWord;
+                _account.Name = account.Name;
+                _account.Email = account.Email;
+                dataBase.SaveChanges();
+            }
+        }
     }
 }

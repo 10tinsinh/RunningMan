@@ -121,5 +121,44 @@ namespace RunningManApi.Service
             var token = jwtToken.CreateToken(jwtTokenDescription);
             return jwtToken.WriteToken(token);
         }
+
+        public void Update(int id, AccountDTO _account)
+        {
+            var checkId = account.GetAccount().SingleOrDefault(ac => ac.Id == id);
+            if (checkId != null)
+            {
+                var Result = new Account
+                {
+                    Id = checkId.Id,
+                    UserName = _account.UserName,
+                    PassWord = _account.PassWord,
+                    Name = _account.Name,
+                    Email = _account.Email,
+                    AccountStatus = _account.AccountStatus
+                };
+                account.UpdateAccount(id,Result);
+                
+                
+            }
+            else
+            {
+                throw new Exception("User invalid");
+            }    
+
+        }
+
+        public void Delete(int id)
+        {
+            var checkId = account.GetAccount().SingleOrDefault(ac => ac.Id == id);
+            if( checkId == null)
+            {
+                throw new Exception("User invalid");
+            }
+            else
+            {
+                account.DeleteAccount(id);
+                
+            }
+        }
     }
 }

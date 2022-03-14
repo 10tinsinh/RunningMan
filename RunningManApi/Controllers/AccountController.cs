@@ -64,5 +64,50 @@ namespace RunningManApi.Controllers
                 return BadRequest();
             }
         }
+        [HttpDelete]
+        public IActionResult DeleteAccount(int id)
+        {
+            
+            try
+            {
+               _accountRepository.Delete(id);
+                return Ok(new ApiResponse
+                {
+                    Success = true,
+                    Message = "Delete User Successfully"
+                });
+            }
+            catch
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Id User don't have exist"
+                });
+            }
+        }
+        [HttpPut]
+        public IActionResult UpdateAccount(int id, AccountDTO account)
+        {
+
+            try
+            {
+                _accountRepository.Update(id,account);
+                return Ok(new ApiResponse
+                {
+                    Success = true,
+                    Message = "Update User Successfully"
+                });
+            }
+            catch
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Id User don't have exist"
+                });
+            }
+        }
+
     }
 }
