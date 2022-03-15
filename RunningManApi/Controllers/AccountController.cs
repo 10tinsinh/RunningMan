@@ -5,7 +5,9 @@ using RunningManApi.DTO.Models;
 using RunningManApi.Service;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace RunningManApi.Controllers
@@ -21,12 +23,33 @@ namespace RunningManApi.Controllers
             _accountRepository = accountRepository;
         }
 
-        [HttpGet("Search")]
-        public IActionResult GetAccount(string search)
+        [Authorize(Roles = Role.Admin)]
+        [HttpGet("AdminSearchUser")]
+        public IActionResult GetAllAccount(string usernameToken)
         {
+           
             try
             {
-                var result = _accountRepository.GetAllAccount(search);
+                var result = _accountRepository.GetAllAccount(usernameToken);
+                return Ok(result);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [Authorize]
+        [HttpGet("InformationUserLogin")]
+        public IActionResult GetAccount()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            IEnumerable<Claim> claim = identity.Claims;
+
+            var usernameToken = claim.First(x => x.Type == "Username").Value;
+            try
+            {
+                var result = _accountRepository.GetAllAccount(usernameToken);
                 return Ok(result);
             }
             catch
@@ -65,8 +88,9 @@ namespace RunningManApi.Controllers
                 return BadRequest();
             }
         }
+
+        [Authorize(Roles = Role.Admin)]
         [HttpDelete]
-        [Authorize]
         public IActionResult DeleteAccount(int id)
         {
             
@@ -88,14 +112,19 @@ namespace RunningManApi.Controllers
                 });
             }
         }
-        [HttpPut]
+
         [Authorize]
-        public IActionResult UpdateAccount(int id, AccountDTO account)
+        [HttpPut]
+        public IActionResult UpdateAccount( AccountDTO account)
         {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            IEnumerable<Claim> claim = identity.Claims;
+
+            var idUsernameToken = int.Parse(claim.First(x => x.Type == "Id").Value);
 
             try
             {
-                _accountRepository.Update(id,account);
+                _accountRepository.Update(idUsernameToken, account);
                 return Ok(new ApiResponse
                 {
                     Success = true,

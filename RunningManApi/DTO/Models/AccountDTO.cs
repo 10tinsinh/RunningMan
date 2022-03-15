@@ -28,4 +28,10 @@ namespace RunningManApi.DTO.Models
 
         public string PassWord { get; set; }
     }
+    public class AccountTypeToken
+    {
+        
+        public string TypeUser { get; set; }
+    }
+        
 }
