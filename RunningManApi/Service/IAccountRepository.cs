@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace RunningManApi.Service
@@ -13,6 +14,8 @@ namespace RunningManApi.Service
         AccountIdDTO CreateAccount(AccountDTO account);
 
         ApiResponse Login(Login login);
+
+        ClaimsPrincipal VerifyToken(string token);
 
         void Update(int id, AccountDTO account);
 

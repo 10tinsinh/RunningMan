@@ -17,11 +17,13 @@ namespace RunningManApi.Service
     {
         private Repository.UserDataAccess account;
         private readonly AppSetting _appSetting;
+        private JwtSecurityTokenHandler tokenHandler;
 
         public AccountRepository( IOptionsMonitor<AppSetting> optionsMonitor)
         {
             account = new UserDataAccess();
             _appSetting = optionsMonitor.CurrentValue;
+            tokenHandler = new JwtSecurityTokenHandler();
         }
 
         public AccountIdDTO CreateAccount(AccountDTO user)
@@ -112,7 +114,7 @@ namespace RunningManApi.Service
         }
         private string GenerateToken(Account account)
         {
-            var jwtToken = new JwtSecurityTokenHandler();
+            
             var secretKeyBytes = Encoding.UTF8.GetBytes(_appSetting.SecretKey);
             var jwtTokenDescription = new SecurityTokenDescriptor
             {
@@ -130,8 +132,8 @@ namespace RunningManApi.Service
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytes), SecurityAlgorithms.HmacSha512Signature)
 
             };
-            var token = jwtToken.CreateToken(jwtTokenDescription);
-            return jwtToken.WriteToken(token);
+            var token = tokenHandler.CreateToken(jwtTokenDescription);
+            return tokenHandler.WriteToken(token);
         }
 
         public void Update(int id, AccountDTO _account)
@@ -171,6 +173,21 @@ namespace RunningManApi.Service
                 account.DeleteAccount(id);
                 
             }
+        }
+
+        public ClaimsPrincipal VerifyToken(string token)
+        {
+            var secretKeyBytes = Encoding.UTF8.GetBytes(_appSetting.SecretKey);
+            var Claims = tokenHandler.ValidateToken(token, new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(secretKeyBytes),
+                ValidateLifetime = true,
+                ValidateAudience = false,
+                ValidateIssuer = false,
+                ClockSkew = TimeSpan.Zero
+            }, out SecurityToken validatedToken);
+            return Claims;
         }
     }
 }

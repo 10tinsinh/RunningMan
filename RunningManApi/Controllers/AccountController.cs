@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RunningManApi.DTO.Models;
+using RunningManApi.Helpers;
 using RunningManApi.Service;
 using System;
 using System.Collections.Generic;
@@ -39,14 +40,14 @@ namespace RunningManApi.Controllers
             }
         }
 
-        [Authorize]
+        [TokenAuthenticationFilter]
         [HttpGet("InformationUserLogin")]
-        public IActionResult GetAccount()
+        public IActionResult GetAccount(string usernameToken)
         {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            IEnumerable<Claim> claim = identity.Claims;
+            //var identity = HttpContext.User.Identity as ClaimsIdentity;
+            //IEnumerable<Claim> claim = identity.Claims;
+            //var usernameToken = claim.First(x => x.Type == "Username").Value;
 
-            var usernameToken = claim.First(x => x.Type == "Username").Value;
             try
             {
                 var result = _accountRepository.GetAllAccount(usernameToken);

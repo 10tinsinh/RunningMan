@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -10,11 +11,13 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 using RunningManApi.DTO.Models;
 using RunningManApi.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -35,29 +38,46 @@ namespace RunningManApi
         {
 
             services.AddControllers();
-            services.AddScoped<IAccountRepository, AccountRepository>();
-            
+            //services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddTransient<IAccountRepository, AccountRepository>();
+
             services.Configure<AppSetting>(Configuration.GetSection("AppSettings"));
             var secretKey = Configuration["AppSettings:SecretKey"];
             var secretKeyBytes = Encoding.UTF8.GetBytes(secretKey);
 
-            services.AddAuthentication
-                (JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
-                {
-                    opt.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        //Auto get token
-                        ValidateIssuer = false,
-                        ValidateAudience = false,
+            //services.AddAuthentication
+            //    (JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
+            //    {
+            //        opt.TokenValidationParameters = new TokenValidationParameters
+            //        {
+            //            //Auto get token
+            //            ValidateIssuer = false,
+            //            ValidateAudience = false,
 
-                        //Sign into token
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(secretKeyBytes),
+            //            //Sign into token
+            //            ValidateIssuerSigningKey = true,
+            //            IssuerSigningKey = new SymmetricSecurityKey(secretKeyBytes),
 
-                        ClockSkew = TimeSpan.Zero
+            //            ClockSkew = TimeSpan.Zero
 
-                    };
-                });
+            //        };
+            //        /*Check token invalid */
+            //        opt.Events = new JwtBearerEvents()
+            //        {
+            //            OnAuthenticationFailed = context =>
+            //            {
+            //                context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+            //                context.Response.ContentType = context.Request.Headers["Accept"].ToString();
+            //                return context.Response.WriteAsync(JsonConvert.SerializeObject(new
+            //                {
+            //                    StatusCode = (int)HttpStatusCode.Unauthorized,
+            //                    Message = "Authentication token is invalid or may be expired."
+            //                }));
+
+                            
+            //            }
+            //        };
+            //    });
 
 
             services.AddSwaggerGen(c =>
