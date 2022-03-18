@@ -16,11 +16,15 @@ namespace RunningManApi.Service
     public class AccountRepository : IAccountRepository
     {
         private Repository.UserDataAccess account;
+        private Repository.RoleDataAccess role;
+        private Repository.DetailRoleDataAccess detailRole;
         private readonly AppSetting _appSetting;
 
         public AccountRepository( IOptionsMonitor<AppSetting> optionsMonitor)
         {
             account = new UserDataAccess();
+            role = new RoleDataAccess();
+            detailRole = new DetailRoleDataAccess();
             _appSetting = optionsMonitor.CurrentValue;
         }
 
@@ -99,6 +103,13 @@ namespace RunningManApi.Service
             }
         }
 
+        private string GetRoleAccount(int id)
+        {
+            var detailRoleLogin = detailRole.GetRole().SingleOrDefault(x => x.AccountId == id);
+
+            var roleData = role.GetRole().SingleOrDefault(x => x.Id == detailRoleLogin.RolesId);
+            return roleData.NameRoles;
+        }
        
         private string GenerateToken(Account account)
         {
@@ -110,7 +121,7 @@ namespace RunningManApi.Service
                 {
                     new Claim (ClaimTypes.Name, account.Name),
                     new Claim (ClaimTypes.Email, account.Email),
-                    
+                    new Claim (ClaimTypes.Role,GetRoleAccount(account.Id)),
                     new Claim ("Username", account.UserName),
                     new Claim ("Id", account.Id.ToString()),
                     new Claim ("AccountStatus", account.AccountStatus.ToString()),
