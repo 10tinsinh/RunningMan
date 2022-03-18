@@ -122,6 +122,7 @@ namespace RunningManApi.Service
                     new Claim (ClaimTypes.Name, account.Name),
                     new Claim (ClaimTypes.Email, account.Email),
                     new Claim (ClaimTypes.Role,GetRoleAccount(account.Id)),
+                    
                     new Claim ("Username", account.UserName),
                     new Claim ("Id", account.Id.ToString()),
                     new Claim ("AccountStatus", account.AccountStatus.ToString()),
