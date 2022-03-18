@@ -23,7 +23,7 @@ namespace RunningManApi.Controllers
             _accountRepository = accountRepository;
         }
 
-        [Authorize(Roles = Role.Admin)]
+        [Authorize]
         [HttpGet("AdminSearchUser")]
         public IActionResult GetAllAccount(string usernameToken)
         {
@@ -43,10 +43,12 @@ namespace RunningManApi.Controllers
         [HttpGet("InformationUserLogin")]
         public IActionResult GetAccount()
         {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            IEnumerable<Claim> claim = identity.Claims;
+            //var identity = HttpContext.User.Identity as ClaimsIdentity;
+            //IEnumerable<Claim> claim = identity.Claims;
 
-            var usernameToken = claim.First(x => x.Type == "Username").Value;
+            //var usernameToken = claim.First(x => x.Type == "Username").Value;
+            var identity = User.Claims.FirstOrDefault(x => x.Type.Equals("Username"));
+            var usernameToken = identity.Value;
             try
             {
                 var result = _accountRepository.GetAllAccount(usernameToken);
@@ -89,7 +91,7 @@ namespace RunningManApi.Controllers
             }
         }
 
-        [Authorize(Roles = Role.Admin)]
+        [Authorize]
         [HttpDelete]
         public IActionResult DeleteAccount(int id)
         {
@@ -117,10 +119,12 @@ namespace RunningManApi.Controllers
         [HttpPut]
         public IActionResult UpdateAccount( AccountDTO account)
         {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            IEnumerable<Claim> claim = identity.Claims;
+            //var identity = HttpContext.User.Identity as ClaimsIdentity;
+            //IEnumerable<Claim> claim = identity.Claims;
 
-            var idUsernameToken = int.Parse(claim.First(x => x.Type == "Id").Value);
+            //var idUsernameToken = int.Parse(claim.First(x => x.Type == "Id").Value);
+            var identity = User.Claims.FirstOrDefault(x => x.Type.Equals("Id"));
+            var idUsernameToken = int.Parse(identity.Value);
 
             try
             {

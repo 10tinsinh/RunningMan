@@ -99,17 +99,7 @@ namespace RunningManApi.Service
             }
         }
 
-        private AccountTypeToken GetAccountType(int accountId)
-        {
-            var checkDetailAccount = account.GetDetailAccount().SingleOrDefault(ac => ac.AccountId == accountId);
-            var checkAccountType = account.GetAccountType().SingleOrDefault(ac => ac.Id == checkDetailAccount.AccountTypeId);
-            var result = new AccountTypeToken
-            {
-                TypeUser = checkAccountType.NameType
-            };
-            return result;
-            
-        }
+       
         private string GenerateToken(Account account)
         {
             var jwtToken = new JwtSecurityTokenHandler();
@@ -120,7 +110,7 @@ namespace RunningManApi.Service
                 {
                     new Claim (ClaimTypes.Name, account.Name),
                     new Claim (ClaimTypes.Email, account.Email),
-                    new Claim (ClaimTypes.Role, GetAccountType(account.Id).TypeUser),
+                    
                     new Claim ("Username", account.UserName),
                     new Claim ("Id", account.Id.ToString()),
                     new Claim ("AccountStatus", account.AccountStatus.ToString()),

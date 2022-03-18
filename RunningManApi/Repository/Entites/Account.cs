@@ -9,13 +9,14 @@ using Microsoft.EntityFrameworkCore;
 namespace RunningManApi.Repository.Entites
 {
     [Table("Account")]
-    [Index(nameof(Id), Name = "UQ__Account__3213E83E5008195F", IsUnique = true)]
-    [Index(nameof(UserName), Name = "UQ__Account__66DCF95CBEF18AAB", IsUnique = true)]
+    [Index(nameof(Id), Name = "UQ__Account__3213E83EB76AD5D6", IsUnique = true)]
+    [Index(nameof(UserName), Name = "UQ__Account__66DCF95C237E11A7", IsUnique = true)]
     public partial class Account
     {
         public Account()
         {
-            DetailAccounts = new HashSet<DetailAccount>();
+            DetailPermissions = new HashSet<DetailPermission>();
+            DetailRoles = new HashSet<DetailRole>();
             DetailTeams = new HashSet<DetailTeam>();
             Games = new HashSet<Game>();
             Points = new HashSet<Point>();
@@ -44,8 +45,10 @@ namespace RunningManApi.Repository.Entites
         [Column("accountStatus")]
         public bool AccountStatus { get; set; }
 
-        [InverseProperty(nameof(DetailAccount.Account))]
-        public virtual ICollection<DetailAccount> DetailAccounts { get; set; }
+        [InverseProperty(nameof(DetailPermission.Account))]
+        public virtual ICollection<DetailPermission> DetailPermissions { get; set; }
+        [InverseProperty(nameof(DetailRole.Account))]
+        public virtual ICollection<DetailRole> DetailRoles { get; set; }
         [InverseProperty(nameof(DetailTeam.Account))]
         public virtual ICollection<DetailTeam> DetailTeams { get; set; }
         [InverseProperty(nameof(Game.Account))]

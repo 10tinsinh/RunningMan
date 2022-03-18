@@ -13,22 +13,24 @@ namespace RunningManApi.Repository
         {
         }
 
-        public MyDbContext(DbContextOptions<DbContext> options)
+        public MyDbContext(DbContextOptions<MyDbContext> options)
             : base(options)
         {
         }
 
         public virtual DbSet<Account> Accounts { get; set; }
-        public virtual DbSet<AccountType> AccountTypes { get; set; }
-        public virtual DbSet<DetailAccount> DetailAccounts { get; set; }
         public virtual DbSet<DetailGame> DetailGames { get; set; }
+        public virtual DbSet<DetailPermission> DetailPermissions { get; set; }
+        public virtual DbSet<DetailRole> DetailRoles { get; set; }
         public virtual DbSet<DetailRound> DetailRounds { get; set; }
         public virtual DbSet<DetailTeam> DetailTeams { get; set; }
         public virtual DbSet<Game> Games { get; set; }
         public virtual DbSet<GamePlay> GamePlays { get; set; }
         public virtual DbSet<GameType> GameTypes { get; set; }
         public virtual DbSet<Localtion> Localtions { get; set; }
+        public virtual DbSet<Permission> Permissions { get; set; }
         public virtual DbSet<Point> Points { get; set; }
+        public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Round> Rounds { get; set; }
         public virtual DbSet<Team> Teams { get; set; }
 
@@ -37,7 +39,7 @@ namespace RunningManApi.Repository
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=RunningMan;Integrated Security=True");
+                optionsBuilder.UseSqlServer("Data Source=DESKTOP-46U8TGP;Initial Catalog=RunningMan;Integrated Security=True");
             }
         }
 
@@ -50,21 +52,6 @@ namespace RunningManApi.Repository
                 entity.Property(e => e.PassWord).IsUnicode(false);
 
                 entity.Property(e => e.UserName).IsUnicode(false);
-            });
-
-            modelBuilder.Entity<DetailAccount>(entity =>
-            {
-                entity.HasOne(d => d.Account)
-                    .WithMany(p => p.DetailAccounts)
-                    .HasForeignKey(d => d.AccountId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_DetailAccount_Account");
-
-                entity.HasOne(d => d.AccountType)
-                    .WithMany(p => p.DetailAccounts)
-                    .HasForeignKey(d => d.AccountTypeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_DetailAccount_AccountType");
             });
 
             modelBuilder.Entity<DetailGame>(entity =>
@@ -83,6 +70,36 @@ namespace RunningManApi.Repository
                     .HasForeignKey(d => d.GameTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_DetailGame_GameType");
+            });
+
+            modelBuilder.Entity<DetailPermission>(entity =>
+            {
+                entity.HasOne(d => d.Account)
+                    .WithMany(p => p.DetailPermissions)
+                    .HasForeignKey(d => d.AccountId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_DetailPermission_Account");
+
+                entity.HasOne(d => d.Permission)
+                    .WithMany(p => p.DetailPermissions)
+                    .HasForeignKey(d => d.PermissionId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_DetailPermission_Permission");
+            });
+
+            modelBuilder.Entity<DetailRole>(entity =>
+            {
+                entity.HasOne(d => d.Account)
+                    .WithMany(p => p.DetailRoles)
+                    .HasForeignKey(d => d.AccountId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_DetailRoles_Account");
+
+                entity.HasOne(d => d.Roles)
+                    .WithMany(p => p.DetailRoles)
+                    .HasForeignKey(d => d.RolesId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_DetailRoles_Roles");
             });
 
             modelBuilder.Entity<DetailRound>(entity =>

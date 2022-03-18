@@ -8,23 +8,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace RunningManApi.Repository.Entites
 {
-    [Table("DetailAccount")]
-    [Index(nameof(Id), Name = "UQ__DetailAc__3213E83EE4047EBA", IsUnique = true)]
-    public partial class DetailAccount
+    [Index(nameof(Id), Name = "UQ__DetailRo__3213E83E92884C67", IsUnique = true)]
+    public partial class DetailRole
     {
         [Key]
         [Column("id")]
         public int Id { get; set; }
         [Column("accountId")]
         public int AccountId { get; set; }
-        [Column("accountTypeId")]
-        public int AccountTypeId { get; set; }
+        public int RolesId { get; set; }
 
         [ForeignKey(nameof(AccountId))]
-        [InverseProperty("DetailAccounts")]
+        [InverseProperty("DetailRoles")]
         public virtual Account Account { get; set; }
-        [ForeignKey(nameof(AccountTypeId))]
-        [InverseProperty("DetailAccounts")]
-        public virtual AccountType AccountType { get; set; }
+        [ForeignKey(nameof(RolesId))]
+        [InverseProperty(nameof(Role.DetailRoles))]
+        public virtual Role Roles { get; set; }
     }
 }

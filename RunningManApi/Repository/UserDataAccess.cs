@@ -34,29 +34,7 @@ namespace RunningManApi.Repository
             });
             return account.ToList();
         }
-        public List<DetailAccount> GetDetailAccount()
-        {
-            var dataBase = new MyDbContext();
-
-            var account = dataBase.DetailAccounts.Select(ac => new DetailAccount
-            {
-                Id = ac.Id,
-                AccountId = ac.AccountId,
-                AccountTypeId = ac.AccountTypeId
-            });
-            return account.ToList();
-        }
-        public List<AccountType> GetAccountType()
-        {
-            var dataBase = new MyDbContext();
-
-            var account = dataBase.AccountTypes.Select(ac => new AccountType
-            {
-                Id = ac.Id,
-                NameType = ac.NameType
-            });
-            return account.ToList();
-        }
+        
         public void CreateAccount(Account account)
         {
             var dataBase = new MyDbContext();
