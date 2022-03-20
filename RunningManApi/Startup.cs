@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -11,6 +12,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RunningManApi.DTO.Models;
+using RunningManApi.Helpers;
+using RunningManApi.Repository.Entites;
 using RunningManApi.Service;
 using System;
 using System.Collections.Generic;
@@ -36,6 +39,8 @@ namespace RunningManApi
 
             services.AddControllers();
             services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddSingleton<IPermissionRepository, PermissionRepository>();
+            
             
             services.Configure<AppSetting>(Configuration.GetSection("AppSettings"));
             var secretKey = Configuration["AppSettings:SecretKey"];
@@ -58,7 +63,25 @@ namespace RunningManApi
 
                     };
                 });
+            /*Authorization filter */
+            services.AddAuthorization(configure =>
+            {
+                configure.AddPolicy("Admin", policyBuilder =>
+                {
+                    policyBuilder.RequireAuthenticatedUser();
+                    policyBuilder.AddRequirements(new RoleRequirement("admin")); 
+                });
+                configure.AddPolicy("View User", policyBuilder =>
+                 {
+                     policyBuilder.RequireAuthenticatedUser();
+                     policyBuilder.AddRequirements(new PermissionRequirement("View User"));
+                 
+                 });
+            });
 
+            services.AddSingleton<IRoleRepository, RoleRepository>();
+            services.AddSingleton<IAuthorizationHandler, PermissionRequirementHandler>();
+            services.AddSingleton<IAuthorizationHandler, RoleRequirementHandler>();
 
             services.AddSwaggerGen(c =>
             {

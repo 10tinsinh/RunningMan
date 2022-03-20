@@ -23,7 +23,7 @@ namespace RunningManApi.Controllers
             _accountRepository = accountRepository;
         }
 
-        [Authorize]
+        [Authorize(Policy ="Admin")]
         [HttpGet("AdminSearchUser")]
         public IActionResult GetAllAccount(string usernameToken)
         {
@@ -39,7 +39,7 @@ namespace RunningManApi.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Policy = "View User")]
         [HttpGet("InformationUserLogin")]
         public IActionResult GetAccount()
         {

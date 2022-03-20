@@ -11,4 +11,13 @@ namespace RunningManApi.DTO.Models
         public int AccountId { get; set; }
         public int PermissionId { get; set; }
     }
+    public class PermissionUserDTO
+    {
+        public string Permission { get; set; }
+    }
+    public class PermissionDTO
+    {
+        public int id { get; set; }
+        public int NamePermission { get; set; }
+    }
 }
