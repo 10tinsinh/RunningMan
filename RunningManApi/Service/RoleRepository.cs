@@ -29,7 +29,7 @@ namespace RunningManApi.Service
         public ApiResponse GetRoleUser(int id, string Role)
         {
             var checkDetailRole = detailRole.GetRole().Where(x => x.AccountId == id);
-            var roleUser = role.GetRole().SingleOrDefault(x => x.NameRoles == Role);
+            var roleUser = role.GetRole().SingleOrDefault(x => x.RoleCode == Role);
             var result = checkDetailRole.SingleOrDefault(x => x.RolesId == roleUser.Id);
             if (result != null)
             {

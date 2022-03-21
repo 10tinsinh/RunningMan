@@ -9,23 +9,27 @@ using Microsoft.EntityFrameworkCore;
 namespace RunningManApi.Repository.Entites
 {
     [Table("Permission")]
-    [Index(nameof(Id), Name = "UQ__Permissi__3213E83E7E7F5048", IsUnique = true)]
+    [Index(nameof(PermissionCode), Name = "UQ__Permissi__0C93AC105B6FEB4A", IsUnique = true)]
+    [Index(nameof(Id), Name = "UQ__Permissi__3214EC06F5600A51", IsUnique = true)]
     public partial class Permission
     {
         public Permission()
         {
-            DetailPermissions = new HashSet<DetailPermission>();
+            PermissionDetails = new HashSet<PermissionDetail>();
         }
 
         [Key]
-        [Column("id")]
         public int Id { get; set; }
         [Required]
-        [Column("namePermission")]
+        [Column("Permission_Code")]
         [StringLength(25)]
-        public string NamePermission { get; set; }
+        public string PermissionCode { get; set; }
+        [Required]
+        [Column("Permission_Name")]
+        [StringLength(50)]
+        public string PermissionName { get; set; }
 
-        [InverseProperty(nameof(DetailPermission.Permission))]
-        public virtual ICollection<DetailPermission> DetailPermissions { get; set; }
+        [InverseProperty(nameof(PermissionDetail.Permission))]
+        public virtual ICollection<PermissionDetail> PermissionDetails { get; set; }
     }
 }

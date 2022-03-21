@@ -8,11 +8,11 @@ namespace RunningManApi.Repository
 {
     public class DetailRoleDataAccess
     {
-        public List<DetailRole> GetRole()
+        public List<RolesDetail> GetRole()
         {
             var dataBase = new MyDbContext();
 
-            var detailRoles = dataBase.DetailRoles.Select(ac => new DetailRole
+            var detailRoles = dataBase.RolesDetails.Select(ac => new RolesDetail
             {
                 Id = ac.Id,
                 RolesId = ac.RolesId,

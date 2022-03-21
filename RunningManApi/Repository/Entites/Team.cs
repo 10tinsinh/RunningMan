@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace RunningManApi.Repository.Entites
 {
     [Table("Team")]
-    [Index(nameof(Id), Name = "UQ__Team__3213E83E26927032", IsUnique = true)]
+    [Index(nameof(Id), Name = "UQ__Team__3214EC0698222CB9", IsUnique = true)]
     public partial class Team
     {
         public Team()
@@ -21,13 +21,10 @@ namespace RunningManApi.Repository.Entites
         }
 
         [Key]
-        [Column("id")]
         public int Id { get; set; }
-        [Column("name")]
         [StringLength(50)]
         public string Name { get; set; }
-        [Column("rankTeam")]
-        public int? RankTeam { get; set; }
+        public int? Rank { get; set; }
 
         [InverseProperty(nameof(DetailRound.Team))]
         public virtual ICollection<DetailRound> DetailRounds { get; set; }

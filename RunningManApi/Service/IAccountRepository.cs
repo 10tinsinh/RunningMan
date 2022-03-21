@@ -9,6 +9,7 @@ namespace RunningManApi.Service
     public interface IAccountRepository
     {
         List<AccountIdDTO> GetAllAccount( string search);
+        AccountIdDTO GetInformationAccountLogin(int id);
 
         AccountIdDTO CreateAccount(AccountDTO account);
 

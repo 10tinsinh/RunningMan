@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace RunningManApi.Repository.Entites
 {
     [Table("Round")]
-    [Index(nameof(Id), Name = "UQ__Round__3213E83EF5441CF8", IsUnique = true)]
+    [Index(nameof(Id), Name = "UQ__Round__3214EC06EBE5A24E", IsUnique = true)]
     public partial class Round
     {
         public Round()
@@ -18,15 +18,13 @@ namespace RunningManApi.Repository.Entites
         }
 
         [Key]
-        [Column("id")]
         public int Id { get; set; }
         [Required]
-        [Column("name")]
         [StringLength(50)]
         public string Name { get; set; }
-        [Column("locationId")]
+        [Column("Location_Id")]
         public int LocationId { get; set; }
-        [Column("accountId")]
+        [Column("Account_Id")]
         public int AccountId { get; set; }
 
         [ForeignKey(nameof(AccountId))]

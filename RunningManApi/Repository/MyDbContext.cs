@@ -19,18 +19,18 @@ namespace RunningManApi.Repository
         }
 
         public virtual DbSet<Account> Accounts { get; set; }
-        public virtual DbSet<DetailGame> DetailGames { get; set; }
-        public virtual DbSet<DetailPermission> DetailPermissions { get; set; }
-        public virtual DbSet<DetailRole> DetailRoles { get; set; }
         public virtual DbSet<DetailRound> DetailRounds { get; set; }
         public virtual DbSet<DetailTeam> DetailTeams { get; set; }
         public virtual DbSet<Game> Games { get; set; }
+        public virtual DbSet<GameDetail> GameDetails { get; set; }
         public virtual DbSet<GamePlay> GamePlays { get; set; }
         public virtual DbSet<GameType> GameTypes { get; set; }
         public virtual DbSet<Localtion> Localtions { get; set; }
         public virtual DbSet<Permission> Permissions { get; set; }
+        public virtual DbSet<PermissionDetail> PermissionDetails { get; set; }
         public virtual DbSet<Point> Points { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
+        public virtual DbSet<RolesDetail> RolesDetails { get; set; }
         public virtual DbSet<Round> Rounds { get; set; }
         public virtual DbSet<Team> Teams { get; set; }
 
@@ -49,57 +49,9 @@ namespace RunningManApi.Repository
 
             modelBuilder.Entity<Account>(entity =>
             {
-                entity.Property(e => e.PassWord).IsUnicode(false);
+                entity.Property(e => e.Password).IsUnicode(false);
 
                 entity.Property(e => e.UserName).IsUnicode(false);
-            });
-
-            modelBuilder.Entity<DetailGame>(entity =>
-            {
-                entity.HasKey(e => new { e.GameId, e.GameTypeId })
-                    .HasName("pk_DetailGame");
-
-                entity.HasOne(d => d.Game)
-                    .WithMany(p => p.DetailGames)
-                    .HasForeignKey(d => d.GameId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_DetailGame_Game");
-
-                entity.HasOne(d => d.GameType)
-                    .WithMany(p => p.DetailGames)
-                    .HasForeignKey(d => d.GameTypeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_DetailGame_GameType");
-            });
-
-            modelBuilder.Entity<DetailPermission>(entity =>
-            {
-                entity.HasOne(d => d.Account)
-                    .WithMany(p => p.DetailPermissions)
-                    .HasForeignKey(d => d.AccountId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_DetailPermission_Account");
-
-                entity.HasOne(d => d.Permission)
-                    .WithMany(p => p.DetailPermissions)
-                    .HasForeignKey(d => d.PermissionId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_DetailPermission_Permission");
-            });
-
-            modelBuilder.Entity<DetailRole>(entity =>
-            {
-                entity.HasOne(d => d.Account)
-                    .WithMany(p => p.DetailRoles)
-                    .HasForeignKey(d => d.AccountId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_DetailRoles_Account");
-
-                entity.HasOne(d => d.Roles)
-                    .WithMany(p => p.DetailRoles)
-                    .HasForeignKey(d => d.RolesId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_DetailRoles_Roles");
             });
 
             modelBuilder.Entity<DetailRound>(entity =>
@@ -145,9 +97,27 @@ namespace RunningManApi.Repository
                     .HasConstraintName("fk_Game_Account");
             });
 
+            modelBuilder.Entity<GameDetail>(entity =>
+            {
+                entity.HasKey(e => new { e.GameId, e.GameTypeId })
+                    .HasName("pk_GameDetail");
+
+                entity.HasOne(d => d.Game)
+                    .WithMany(p => p.GameDetails)
+                    .HasForeignKey(d => d.GameId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_GameDetail_Game");
+
+                entity.HasOne(d => d.GameType)
+                    .WithMany(p => p.GameDetails)
+                    .HasForeignKey(d => d.GameTypeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_GameDetail_GameType");
+            });
+
             modelBuilder.Entity<GamePlay>(entity =>
             {
-                entity.Property(e => e.RankGame).HasDefaultValueSql("((1))");
+                entity.Property(e => e.Rank).HasDefaultValueSql("((1))");
 
                 entity.HasOne(d => d.Game)
                     .WithMany(p => p.GamePlays)
@@ -158,6 +128,26 @@ namespace RunningManApi.Repository
                     .WithMany(p => p.GamePlays)
                     .HasForeignKey(d => d.TeamId)
                     .HasConstraintName("fk_GamePlay_Team");
+            });
+
+            modelBuilder.Entity<Permission>(entity =>
+            {
+                entity.Property(e => e.PermissionCode).IsUnicode(false);
+            });
+
+            modelBuilder.Entity<PermissionDetail>(entity =>
+            {
+                entity.HasOne(d => d.Account)
+                    .WithMany(p => p.PermissionDetails)
+                    .HasForeignKey(d => d.AccountId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_PermissionDetail_Account");
+
+                entity.HasOne(d => d.Permission)
+                    .WithMany(p => p.PermissionDetails)
+                    .HasForeignKey(d => d.PermissionId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_PermissionDetail_Permission");
             });
 
             modelBuilder.Entity<Point>(entity =>
@@ -173,6 +163,21 @@ namespace RunningManApi.Repository
                     .WithMany(p => p.Points)
                     .HasForeignKey(d => d.TeamId)
                     .HasConstraintName("fk_Point_Team");
+            });
+
+            modelBuilder.Entity<RolesDetail>(entity =>
+            {
+                entity.HasOne(d => d.Account)
+                    .WithMany(p => p.RolesDetails)
+                    .HasForeignKey(d => d.AccountId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_RolesDetail_Account");
+
+                entity.HasOne(d => d.Roles)
+                    .WithMany(p => p.RolesDetails)
+                    .HasForeignKey(d => d.RolesId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_RolesDetail_Roles");
             });
 
             modelBuilder.Entity<Round>(entity =>
@@ -192,7 +197,7 @@ namespace RunningManApi.Repository
 
             modelBuilder.Entity<Team>(entity =>
             {
-                entity.Property(e => e.RankTeam).HasDefaultValueSql("((1))");
+                entity.Property(e => e.Rank).HasDefaultValueSql("((1))");
             });
 
             OnModelCreatingPartial(modelBuilder);

@@ -8,22 +8,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace RunningManApi.Repository.Entites
 {
-    [Table("DetailPermission")]
-    [Index(nameof(Id), Name = "UQ__DetailPe__3213E83E7547058C", IsUnique = true)]
-    public partial class DetailPermission
+    [Table("PermissionDetail")]
+    [Index(nameof(Id), Name = "UQ__Permissi__3214EC06EB3CB07C", IsUnique = true)]
+    public partial class PermissionDetail
     {
         [Key]
-        [Column("id")]
         public int Id { get; set; }
-        [Column("accountId")]
+        [Column("Account_Id")]
         public int AccountId { get; set; }
+        [Column("Permission_Id")]
         public int PermissionId { get; set; }
 
         [ForeignKey(nameof(AccountId))]
-        [InverseProperty("DetailPermissions")]
+        [InverseProperty("PermissionDetails")]
         public virtual Account Account { get; set; }
         [ForeignKey(nameof(PermissionId))]
-        [InverseProperty("DetailPermissions")]
+        [InverseProperty("PermissionDetails")]
         public virtual Permission Permission { get; set; }
     }
 }

@@ -71,10 +71,10 @@ namespace RunningManApi
                     policyBuilder.RequireAuthenticatedUser();
                     policyBuilder.AddRequirements(new RoleRequirement("admin")); 
                 });
-                configure.AddPolicy("View User", policyBuilder =>
+                configure.AddPolicy("ViewUser", policyBuilder =>
                  {
                      policyBuilder.RequireAuthenticatedUser();
-                     policyBuilder.AddRequirements(new PermissionRequirement("View User"));
+                     policyBuilder.AddRequirements(new PermissionRequirement("RUNNING_MAN_USER_VIEW"));
                  
                  });
             });

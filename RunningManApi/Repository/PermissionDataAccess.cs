@@ -15,7 +15,8 @@ namespace RunningManApi.Repository
             var permissions = dataBase.Permissions.Select(ac => new Permission
             {
                 Id = ac.Id,
-                NamePermission = ac.NamePermission
+                PermissionCode = ac.PermissionCode,
+                PermissionName =ac.PermissionName
 
             });
             return permissions.ToList();

@@ -9,21 +9,19 @@ using Microsoft.EntityFrameworkCore;
 namespace RunningManApi.Repository.Entites
 {
     [Table("GamePlay")]
-    [Index(nameof(Id), Name = "UQ__GamePlay__3213E83E4954C83B", IsUnique = true)]
+    [Index(nameof(Id), Name = "UQ__GamePlay__3214EC067CCDA238", IsUnique = true)]
     public partial class GamePlay
     {
         [Key]
-        [Column("id")]
         public int Id { get; set; }
-        [Column("rankGame")]
-        public int? RankGame { get; set; }
-        [Column("giftPoint")]
-        public int? GiftPoint { get; set; }
-        [Column("date", TypeName = "date")]
+        public int? Rank { get; set; }
+        [Column("Bonus_Points")]
+        public int? BonusPoints { get; set; }
+        [Column(TypeName = "date")]
         public DateTime? Date { get; set; }
-        [Column("gameId")]
+        [Column("Game_Id")]
         public int? GameId { get; set; }
-        [Column("teamId")]
+        [Column("Team_Id")]
         public int? TeamId { get; set; }
 
         [ForeignKey(nameof(GameId))]

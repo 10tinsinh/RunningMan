@@ -9,17 +9,16 @@ using Microsoft.EntityFrameworkCore;
 namespace RunningManApi.Repository.Entites
 {
     [Table("DetailRound")]
-    [Index(nameof(Id), Name = "UQ__DetailRo__3213E83E861E8458", IsUnique = true)]
+    [Index(nameof(Id), Name = "UQ__DetailRo__3214EC06F78A597E", IsUnique = true)]
     public partial class DetailRound
     {
         [Key]
-        [Column("id")]
         public int Id { get; set; }
-        [Column("roundId")]
+        [Column("Round_Id")]
         public int? RoundId { get; set; }
-        [Column("gameId")]
+        [Column("Game_Id")]
         public int? GameId { get; set; }
-        [Column("teamId")]
+        [Column("Team_Id")]
         public int? TeamId { get; set; }
 
         [ForeignKey(nameof(GameId))]

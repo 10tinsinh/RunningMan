@@ -8,11 +8,11 @@ namespace RunningManApi.Repository
 {
     public class DetailPermissionDataAccess
     {
-        public List<DetailPermission> GetDetailPermission()
+        public List<PermissionDetail> GetDetailPermission()
         {
             var dataBase = new MyDbContext();
 
-            var detailPermissions = dataBase.DetailPermissions.Select(ac => new DetailPermission
+            var detailPermissions = dataBase.PermissionDetails.Select(ac => new PermissionDetail
             {
                 Id = ac.Id,
                 PermissionId = ac.PermissionId,

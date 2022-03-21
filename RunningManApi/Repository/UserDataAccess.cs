@@ -27,7 +27,7 @@ namespace RunningManApi.Repository
             {
                 Id = ac.Id,
                 UserName = ac.UserName,
-                PassWord = ac.PassWord,
+                Password = ac.Password,
                 Name = ac.Name,
                 Email = ac.Email,
                 AccountStatus = ac.AccountStatus
@@ -42,7 +42,7 @@ namespace RunningManApi.Repository
             {
 
                 UserName = account.UserName,
-                PassWord = account.PassWord,
+                Password = account.Password,
                 Name = account.Name,
                 Email = account.Email,
                 AccountStatus = account.AccountStatus
@@ -69,7 +69,7 @@ namespace RunningManApi.Repository
             if (account != null)
             {
                 _account.UserName = account.UserName;
-                _account.PassWord = account.PassWord;
+                _account.Password = account.Password;
                 _account.Name = account.Name;
                 _account.Email = account.Email;
                 dataBase.SaveChanges();

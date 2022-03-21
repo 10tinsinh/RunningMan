@@ -18,6 +18,6 @@ namespace RunningManApi.DTO.Models
     public class PermissionDTO
     {
         public int id { get; set; }
-        public int NamePermission { get; set; }
+        public int PermissionCode { get; set; }
     }
 }

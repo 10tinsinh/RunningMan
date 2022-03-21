@@ -30,7 +30,7 @@ namespace RunningManApi.Service
 
         public AccountIdDTO CreateAccount(AccountDTO user)
         {
-            var checkUser = account.GetAccount().SingleOrDefault(us => us.UserName == user.UserName);
+            var checkUser = account.GetAccount().SingleOrDefault(us => us.UserName == user.Username);
             if(checkUser != null)
             {
                 throw new Exception("User invalid");
@@ -38,8 +38,8 @@ namespace RunningManApi.Service
 
             var addAccount = new Account
             {
-                UserName = user.UserName,
-                PassWord = user.PassWord,
+                UserName = user.Username,
+                Password = user.Password,
                 Name = user.Name,
                 Email = user.Email,
                 AccountStatus = true
@@ -48,14 +48,15 @@ namespace RunningManApi.Service
             return new AccountIdDTO
             {
                 
-                UserName = addAccount.UserName,
-                PassWord = addAccount.PassWord,
+                Username = addAccount.UserName,
+                Password = addAccount.Password,
                 Name = addAccount.Name,
                 Email = addAccount.Email,
                 AccountStatus = addAccount.AccountStatus
             };
             
         }
+
 
         public List<AccountIdDTO> GetAllAccount(string search)
         {
@@ -69,8 +70,8 @@ namespace RunningManApi.Service
             var User = checkUser.Select(ac => new AccountIdDTO
             {
                 Id = ac.Id,
-                UserName = ac.UserName,
-                PassWord = ac.PassWord,
+                Username = ac.UserName,
+                Password = ac.Password,
                 Name = ac.Name,
                 Email = ac.Email,
                 AccountStatus = ac.AccountStatus
@@ -80,7 +81,7 @@ namespace RunningManApi.Service
 
         public ApiResponse Login(Login login)
         {
-            var checkUser = account.GetAccount().SingleOrDefault(us => us.UserName == login.UserName && us.PassWord == login.PassWord);
+            var checkUser = account.GetAccount().SingleOrDefault(us => us.UserName == login.Username && us.Password == login.Password);
             if (checkUser == null)
             {
                 var result = new ApiResponse
@@ -108,7 +109,7 @@ namespace RunningManApi.Service
             var detailRoleLogin = detailRole.GetRole().SingleOrDefault(x => x.AccountId == id);
 
             var roleData = role.GetRole().SingleOrDefault(x => x.Id == detailRoleLogin.RolesId);
-            return roleData.NameRoles;
+            return roleData.RoleCode;
         }
        
         private string GenerateToken(Account account)
@@ -121,8 +122,6 @@ namespace RunningManApi.Service
                 {
                     new Claim (ClaimTypes.Name, account.Name),
                     new Claim (ClaimTypes.Email, account.Email),
-                    new Claim ("Role",GetRoleAccount(account.Id)),
-                    
                     new Claim ("Username", account.UserName),
                     new Claim ("Id", account.Id.ToString()),
                     new Claim ("AccountStatus", account.AccountStatus.ToString()),
@@ -144,8 +143,8 @@ namespace RunningManApi.Service
                 var Result = new Account
                 {
                     Id = checkId.Id,
-                    UserName = _account.UserName,
-                    PassWord = _account.PassWord,
+                    UserName = _account.Username,
+                    Password = _account.Password,
                     Name = _account.Name,
                     Email = _account.Email,
                     AccountStatus = _account.AccountStatus
@@ -173,6 +172,21 @@ namespace RunningManApi.Service
                 account.DeleteAccount(id);
                 
             }
+        }
+
+        public AccountIdDTO GetInformationAccountLogin(int id)
+        {
+            var checkUser = account.GetAccount().SingleOrDefault(x => x.Id == id);
+            var User =  new AccountIdDTO
+            {
+                Id = checkUser.Id,
+                Username = checkUser.UserName,
+                Password = checkUser.Password,
+                Name = checkUser.Name,
+                Email = checkUser.Email,
+                AccountStatus = checkUser.AccountStatus
+            };
+            return User;
         }
     }
 }

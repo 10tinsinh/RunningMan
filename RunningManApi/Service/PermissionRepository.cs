@@ -31,7 +31,7 @@ namespace RunningManApi.Service
         public ApiResponse GetPermissionUser(int id, string permissionPolicy)
         {
             var checkDetailPermission = detailPermission.GetDetailPermission().Where(x => x.AccountId == id);
-            var permissionUser = permission.GetPermission().SingleOrDefault(x => x.NamePermission == permissionPolicy);
+            var permissionUser = permission.GetPermission().SingleOrDefault(x => x.PermissionCode == permissionPolicy);
             var result = checkDetailPermission.SingleOrDefault(x => x.PermissionId == permissionUser.Id);
             if (result != null)
             {

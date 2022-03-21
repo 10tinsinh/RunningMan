@@ -8,23 +8,27 @@ using Microsoft.EntityFrameworkCore;
 
 namespace RunningManApi.Repository.Entites
 {
-    [Index(nameof(Id), Name = "UQ__Roles__3213E83EEE1D3C37", IsUnique = true)]
+    [Index(nameof(RoleCode), Name = "UQ__Roles__1E835107BC2E811D", IsUnique = true)]
+    [Index(nameof(Id), Name = "UQ__Roles__3214EC06EF9C705C", IsUnique = true)]
     public partial class Role
     {
         public Role()
         {
-            DetailRoles = new HashSet<DetailRole>();
+            RolesDetails = new HashSet<RolesDetail>();
         }
 
         [Key]
-        [Column("id")]
         public int Id { get; set; }
         [Required]
-        [Column("nameRoles")]
+        [Column("Role_Code")]
         [StringLength(25)]
-        public string NameRoles { get; set; }
+        public string RoleCode { get; set; }
+        [Required]
+        [Column("Role_Name")]
+        [StringLength(50)]
+        public string RoleName { get; set; }
 
-        [InverseProperty(nameof(DetailRole.Roles))]
-        public virtual ICollection<DetailRole> DetailRoles { get; set; }
+        [InverseProperty(nameof(RolesDetail.Roles))]
+        public virtual ICollection<RolesDetail> RolesDetails { get; set; }
     }
 }

@@ -39,7 +39,7 @@ namespace RunningManApi.Controllers
             }
         }
 
-        [Authorize(Policy = "View User")]
+        [Authorize(Policy = "ViewUser")]
         [HttpGet("InformationUserLogin")]
         public IActionResult GetAccount()
         {
@@ -47,11 +47,11 @@ namespace RunningManApi.Controllers
             //IEnumerable<Claim> claim = identity.Claims;
 
             //var usernameToken = claim.First(x => x.Type == "Username").Value;
-            var identity = User.Claims.FirstOrDefault(x => x.Type.Equals("Username"));
+            var identity = User.Claims.FirstOrDefault(x => x.Type.Equals("Id"));
             var usernameToken = identity.Value;
             try
             {
-                var result = _accountRepository.GetAllAccount(usernameToken);
+                var result = _accountRepository.GetInformationAccountLogin(int.Parse(usernameToken));
                 return Ok(result);
             }
             catch

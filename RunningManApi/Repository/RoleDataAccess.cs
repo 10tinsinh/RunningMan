@@ -15,7 +15,8 @@ namespace RunningManApi.Repository
             var roles = dataBase.Roles.Select(ac => new Role
             {
                 Id = ac.Id,
-                NameRoles = ac.NameRoles
+                RoleCode = ac.RoleCode,
+                RoleName = ac.RoleName
                
             });
             return roles.ToList();

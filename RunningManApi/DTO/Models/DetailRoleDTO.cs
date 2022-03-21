@@ -13,6 +13,6 @@ namespace RunningManApi.DTO.Models
     }
     public class RoleAccount
     {
-        public string RuleName { get; set; }
+        public string RoleCode { get; set; }
     }
 }

@@ -9,15 +9,14 @@ using Microsoft.EntityFrameworkCore;
 namespace RunningManApi.Repository.Entites
 {
     [Table("DetailTeam")]
-    [Index(nameof(Id), Name = "UQ__DetailTe__3213E83EDCA93D9C", IsUnique = true)]
+    [Index(nameof(Id), Name = "UQ__DetailTe__3214EC0659CCAB8A", IsUnique = true)]
     public partial class DetailTeam
     {
         [Key]
-        [Column("id")]
         public int Id { get; set; }
-        [Column("teamId")]
+        [Column("Team_Id")]
         public int TeamId { get; set; }
-        [Column("accountId")]
+        [Column("Account_Id")]
         public int AccountId { get; set; }
 
         [ForeignKey(nameof(AccountId))]
