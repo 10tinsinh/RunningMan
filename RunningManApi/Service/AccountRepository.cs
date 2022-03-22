@@ -18,13 +18,18 @@ namespace RunningManApi.Service
         private Repository.UserDataAccess account;
         private Repository.RoleDataAccess role;
         private Repository.DetailRoleDataAccess detailRole;
+        private readonly PermissionDataAccess permission;
+        private readonly DetailPermissionDataAccess detailPermission;
         private readonly AppSetting _appSetting;
 
         public AccountRepository( IOptionsMonitor<AppSetting> optionsMonitor)
         {
             account = new UserDataAccess();
+            
             role = new RoleDataAccess();
             detailRole = new DetailRoleDataAccess();
+            permission = new PermissionDataAccess();
+            detailPermission = new DetailPermissionDataAccess();
             _appSetting = optionsMonitor.CurrentValue;
         }
 
@@ -45,9 +50,32 @@ namespace RunningManApi.Service
                 AccountStatus = true
             };
             account.CreateAccount(addAccount);
+            var newUser = account.GetAccount().SingleOrDefault(us => us.UserName == addAccount.UserName);
+
+            var roleUser = role.GetRole().SingleOrDefault(x => x.RoleCode == "user");
+            var addRoleDetail = new RolesDetail
+            {
+                AccountId = newUser.Id,
+                RolesId = roleUser.Id
+            };
+            detailRole.CreateRoleDetail(addRoleDetail);
+
+            var permissionUser = permission.GetPermission().Where(x => x.PermissionCode == "RUNNING_MAN_USER_VIEW" || x.PermissionCode == "RUNNING_MAN_USER_UPDATE");
+            foreach (int temp in permissionUser.Select(x=>x.Id))
+            {
+                var addPermissionDetail = new PermissionDetail
+                {
+                    AccountId = newUser.Id,
+                    PermissionId = temp
+                };
+                detailPermission.CreatePermissionDetail(addPermissionDetail);
+            }    
+
+
+
             return new AccountIdDTO
             {
-                
+                Id = newUser.Id,
                 Username = addAccount.UserName,
                 Password = addAccount.Password,
                 Name = addAccount.Name,
@@ -82,26 +110,39 @@ namespace RunningManApi.Service
         public ApiResponse Login(Login login)
         {
             var checkUser = account.GetAccount().SingleOrDefault(us => us.UserName == login.Username && us.Password == login.Password);
-            if (checkUser == null)
+            if(checkUser.AccountStatus == true)
+            {  
+                if (checkUser == null)
+                {
+                    var result = new ApiResponse
+                    {
+                        Success = false,
+                        Message = "Username or Password invalid",
+                        Data = null
+                    };
+                    return result;
+                }
+                else 
+                { 
+                    var result = new ApiResponse
+                    {
+                        Success = true,
+                        Message = "Loggin successfully",
+                        Data = GenerateToken(checkUser)
+                    };
+                    return result; 
+                }
+            }
+            else
             {
                 var result = new ApiResponse
                 {
                     Success = false,
-                    Message = "Username or Password invalid",
+                    Message = "User is locked",
                     Data = null
                 };
                 return result;
-            }
-            else 
-            { 
-                var result = new ApiResponse
-                {
-                    Success = true,
-                    Message = "Loggin successfully",
-                    Data = GenerateToken(checkUser)
-                };
-                return result; 
-            }
+            }    
         }
 
         private string GetRoleAccount(int id)
@@ -169,7 +210,27 @@ namespace RunningManApi.Service
             }
             else
             {
+                var permissioncheck = detailPermission.GetDetailPermission().Where(x => x.AccountId == id);
+                if(permissioncheck != null)
+                {
+                    foreach(int temp in permissioncheck.Select(x=>x.Id))
+                    {
+                        detailPermission.DeletePermissionDetail(temp);
+                    }    
+                }    
+
+                var rolecheck = detailRole.GetRole().Where(x => x.AccountId == id);
+                if (rolecheck != null)
+                {
+                    foreach (int temp in rolecheck.Select(x => x.Id))
+                    {
+                        detailRole.DeleteRole(temp);
+                    }
+                }
+               
                 account.DeleteAccount(id);
+                
+                 
                 
             }
         }

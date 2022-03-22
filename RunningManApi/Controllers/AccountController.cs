@@ -9,6 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using RunningManApi.Helpers;
 
 namespace RunningManApi.Controllers
 {
@@ -38,7 +39,7 @@ namespace RunningManApi.Controllers
                 return BadRequest();
             }
         }
-
+        
         [Authorize(Policy = "ViewUser")]
         [HttpGet("InformationUserLogin")]
         public IActionResult GetAccount()
@@ -91,7 +92,7 @@ namespace RunningManApi.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Policy = "DeleteAccount")]
         [HttpDelete]
         public IActionResult DeleteAccount(int id)
         {
@@ -115,7 +116,7 @@ namespace RunningManApi.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Policy = "UpdateAccount")]
         [HttpPut]
         public IActionResult UpdateAccount( AccountDTO account)
         {

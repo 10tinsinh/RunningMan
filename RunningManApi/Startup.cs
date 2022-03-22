@@ -66,17 +66,33 @@ namespace RunningManApi
             /*Authorization filter */
             services.AddAuthorization(configure =>
             {
+                
                 configure.AddPolicy("Admin", policyBuilder =>
                 {
                     policyBuilder.RequireAuthenticatedUser();
-                    policyBuilder.AddRequirements(new RoleRequirement("admin")); 
+                    policyBuilder.AddRequirements(new RoleRequirement("admin"));
+                    policyBuilder.AddRequirements(new PermissionRequirement("RUNNING_MAN_USER_VIEW"));
                 });
                 configure.AddPolicy("ViewUser", policyBuilder =>
                  {
                      policyBuilder.RequireAuthenticatedUser();
                      policyBuilder.AddRequirements(new PermissionRequirement("RUNNING_MAN_USER_VIEW"));
-                 
+
                  });
+                configure.AddPolicy("DeleteAccount", policyBuilder =>
+                {
+                    policyBuilder.RequireAuthenticatedUser();
+                    policyBuilder.AddRequirements(new RoleRequirement("admin"));
+                    policyBuilder.AddRequirements(new PermissionRequirement("RUNNING_MAN_USER_DELETE"));
+
+                });
+                configure.AddPolicy("UpdateAccount", policyBuilder =>
+                {
+                    policyBuilder.RequireAuthenticatedUser();
+                    
+                    policyBuilder.AddRequirements(new PermissionRequirement("RUNNING_MAN_USER_UPDATE"));
+
+                });
             });
 
             services.AddSingleton<IRoleRepository, RoleRepository>();

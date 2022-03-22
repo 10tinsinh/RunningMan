@@ -21,5 +21,39 @@ namespace RunningManApi.Repository
             });
             return detailPermissions.ToList();
         }
+        public void CreatePermissionDetail(PermissionDetail permissionDetail)
+        {
+            var dataBase = new MyDbContext();
+            var _permission = new PermissionDetail
+            {
+                AccountId = permissionDetail.AccountId,
+                PermissionId = permissionDetail.PermissionId
+            };
+            dataBase.Add(_permission);
+            dataBase.SaveChanges();
+        }
+
+        public void UpdatePermissionDetail(int id, PermissionDetail permissionDetail)
+        {
+            var dataBase = new MyDbContext();
+            var permission = dataBase.PermissionDetails.SingleOrDefault(x => x.Id == id);
+            if (permission != null)
+            {
+                permission.AccountId = permissionDetail.AccountId;
+                permission.PermissionId = permissionDetail.PermissionId;
+                dataBase.SaveChanges();
+            }
+        }
+
+        public void DeletePermissionDetail(int id)
+        {
+            var dataBase = new MyDbContext();
+            var permission = dataBase.PermissionDetails.SingleOrDefault(x => x.Id == id);
+            if (permission != null)
+            {
+                dataBase.Remove(permission);
+                dataBase.SaveChanges();
+            }
+        }
     }
 }
