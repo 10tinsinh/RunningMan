@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace RunningManApi.Repository.Entites
 {
     [Table("GameType")]
-    [Index(nameof(Id), Name = "UQ__GameType__3214EC0643430061", IsUnique = true)]
+    [Index(nameof(Id), Name = "UQ__GameType__3214EC06FB81E7B3", IsUnique = true)]
     public partial class GameType
     {
         public GameType()

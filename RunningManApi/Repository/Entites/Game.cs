@@ -9,14 +9,14 @@ using Microsoft.EntityFrameworkCore;
 namespace RunningManApi.Repository.Entites
 {
     [Table("Game")]
-    [Index(nameof(Id), Name = "UQ__Game__3214EC060045BCBC", IsUnique = true)]
+    [Index(nameof(Id), Name = "UQ__Game__3214EC06993FCA91", IsUnique = true)]
     public partial class Game
     {
         public Game()
         {
-            DetailRounds = new HashSet<DetailRound>();
             GameDetails = new HashSet<GameDetail>();
             GamePlays = new HashSet<GamePlay>();
+            RoundDetails = new HashSet<RoundDetail>();
         }
 
         [Key]
@@ -30,11 +30,11 @@ namespace RunningManApi.Repository.Entites
         [ForeignKey(nameof(AccountId))]
         [InverseProperty("Games")]
         public virtual Account Account { get; set; }
-        [InverseProperty(nameof(DetailRound.Game))]
-        public virtual ICollection<DetailRound> DetailRounds { get; set; }
         [InverseProperty(nameof(GameDetail.Game))]
         public virtual ICollection<GameDetail> GameDetails { get; set; }
         [InverseProperty(nameof(GamePlay.Game))]
         public virtual ICollection<GamePlay> GamePlays { get; set; }
+        [InverseProperty(nameof(RoundDetail.Game))]
+        public virtual ICollection<RoundDetail> RoundDetails { get; set; }
     }
 }

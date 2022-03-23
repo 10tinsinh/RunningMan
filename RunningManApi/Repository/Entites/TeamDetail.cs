@@ -8,9 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace RunningManApi.Repository.Entites
 {
-    [Table("DetailTeam")]
-    [Index(nameof(Id), Name = "UQ__DetailTe__3214EC0659CCAB8A", IsUnique = true)]
-    public partial class DetailTeam
+    [Table("TeamDetail")]
+    [Index(nameof(Id), Name = "UQ__TeamDeta__3214EC0664D91536", IsUnique = true)]
+    public partial class TeamDetail
     {
         [Key]
         public int Id { get; set; }
@@ -20,10 +20,10 @@ namespace RunningManApi.Repository.Entites
         public int AccountId { get; set; }
 
         [ForeignKey(nameof(AccountId))]
-        [InverseProperty("DetailTeams")]
+        [InverseProperty("TeamDetails")]
         public virtual Account Account { get; set; }
         [ForeignKey(nameof(TeamId))]
-        [InverseProperty("DetailTeams")]
+        [InverseProperty("TeamDetails")]
         public virtual Team Team { get; set; }
     }
 }

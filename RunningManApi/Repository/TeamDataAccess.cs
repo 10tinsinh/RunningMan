@@ -34,14 +34,14 @@ namespace RunningManApi.Repository
             dataBase.SaveChanges();
         }
 
-        public void UpdateRole(int id, RolesDetail rolesDetail)
+        public void UpdateTeam(int id, Team team)
         {
             var dataBase = new MyDbContext();
-            var roles = dataBase.RolesDetails.SingleOrDefault(x => x.Id == id);
-            if (roles != null)
+            var _team = dataBase.Teams.SingleOrDefault(x => x.Id == id);
+            if (_team != null)
             {
-                roles.AccountId = rolesDetail.AccountId;
-                roles.RolesId = rolesDetail.RolesId;
+                _team.Name = team.Name;
+                _team.Rank = team.Rank;
                 dataBase.SaveChanges();
             }
         }
@@ -49,10 +49,10 @@ namespace RunningManApi.Repository
         public void DeleteRole(int id)
         {
             var dataBase = new MyDbContext();
-            var roles = dataBase.RolesDetails.SingleOrDefault(x => x.Id == id);
-            if (roles != null)
+            var _team = dataBase.Teams.SingleOrDefault(x => x.Id == id);
+            if (_team != null)
             {
-                dataBase.Remove(roles);
+                dataBase.Remove(_team);
                 dataBase.SaveChanges();
             }
         }

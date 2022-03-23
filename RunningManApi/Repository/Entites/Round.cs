@@ -9,12 +9,12 @@ using Microsoft.EntityFrameworkCore;
 namespace RunningManApi.Repository.Entites
 {
     [Table("Round")]
-    [Index(nameof(Id), Name = "UQ__Round__3214EC06EBE5A24E", IsUnique = true)]
+    [Index(nameof(Id), Name = "UQ__Round__3214EC069C4266E6", IsUnique = true)]
     public partial class Round
     {
         public Round()
         {
-            DetailRounds = new HashSet<DetailRound>();
+            RoundDetails = new HashSet<RoundDetail>();
         }
 
         [Key]
@@ -33,7 +33,7 @@ namespace RunningManApi.Repository.Entites
         [ForeignKey(nameof(LocationId))]
         [InverseProperty(nameof(Localtion.Rounds))]
         public virtual Localtion Location { get; set; }
-        [InverseProperty(nameof(DetailRound.Round))]
-        public virtual ICollection<DetailRound> DetailRounds { get; set; }
+        [InverseProperty(nameof(RoundDetail.Round))]
+        public virtual ICollection<RoundDetail> RoundDetails { get; set; }
     }
 }

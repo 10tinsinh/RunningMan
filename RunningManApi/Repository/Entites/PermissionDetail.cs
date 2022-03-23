@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace RunningManApi.Repository.Entites
 {
     [Table("PermissionDetail")]
-    [Index(nameof(Id), Name = "UQ__Permissi__3214EC06EB3CB07C", IsUnique = true)]
+    [Index(nameof(Id), Name = "UQ__Permissi__3214EC060F979212", IsUnique = true)]
     public partial class PermissionDetail
     {
         [Key]

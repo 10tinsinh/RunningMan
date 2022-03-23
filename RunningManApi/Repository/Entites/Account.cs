@@ -9,18 +9,18 @@ using Microsoft.EntityFrameworkCore;
 namespace RunningManApi.Repository.Entites
 {
     [Table("Account")]
-    [Index(nameof(Id), Name = "UQ__Account__3214EC064D6866DE", IsUnique = true)]
-    [Index(nameof(UserName), Name = "UQ__Account__C9F2845620022A21", IsUnique = true)]
+    [Index(nameof(Id), Name = "UQ__Account__3214EC0605A31C3A", IsUnique = true)]
+    [Index(nameof(UserName), Name = "UQ__Account__C9F284561CE73400", IsUnique = true)]
     public partial class Account
     {
         public Account()
         {
-            DetailTeams = new HashSet<DetailTeam>();
             Games = new HashSet<Game>();
             PermissionDetails = new HashSet<PermissionDetail>();
             Points = new HashSet<Point>();
             RolesDetails = new HashSet<RolesDetail>();
             Rounds = new HashSet<Round>();
+            TeamDetails = new HashSet<TeamDetail>();
         }
 
         [Key]
@@ -40,8 +40,6 @@ namespace RunningManApi.Repository.Entites
         [Column("Account_Status")]
         public bool AccountStatus { get; set; }
 
-        [InverseProperty(nameof(DetailTeam.Account))]
-        public virtual ICollection<DetailTeam> DetailTeams { get; set; }
         [InverseProperty(nameof(Game.Account))]
         public virtual ICollection<Game> Games { get; set; }
         [InverseProperty(nameof(PermissionDetail.Account))]
@@ -52,5 +50,7 @@ namespace RunningManApi.Repository.Entites
         public virtual ICollection<RolesDetail> RolesDetails { get; set; }
         [InverseProperty(nameof(Round.Account))]
         public virtual ICollection<Round> Rounds { get; set; }
+        [InverseProperty(nameof(TeamDetail.Account))]
+        public virtual ICollection<TeamDetail> TeamDetails { get; set; }
     }
 }

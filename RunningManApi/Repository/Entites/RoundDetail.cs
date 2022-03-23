@@ -8,9 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace RunningManApi.Repository.Entites
 {
-    [Table("DetailRound")]
-    [Index(nameof(Id), Name = "UQ__DetailRo__3214EC06F78A597E", IsUnique = true)]
-    public partial class DetailRound
+    [Table("RoundDetail")]
+    [Index(nameof(Id), Name = "UQ__RoundDet__3214EC0691455907", IsUnique = true)]
+    public partial class RoundDetail
     {
         [Key]
         public int Id { get; set; }
@@ -22,13 +22,13 @@ namespace RunningManApi.Repository.Entites
         public int? TeamId { get; set; }
 
         [ForeignKey(nameof(GameId))]
-        [InverseProperty("DetailRounds")]
+        [InverseProperty("RoundDetails")]
         public virtual Game Game { get; set; }
         [ForeignKey(nameof(RoundId))]
-        [InverseProperty("DetailRounds")]
+        [InverseProperty("RoundDetails")]
         public virtual Round Round { get; set; }
         [ForeignKey(nameof(TeamId))]
-        [InverseProperty("DetailRounds")]
+        [InverseProperty("RoundDetails")]
         public virtual Team Team { get; set; }
     }
 }

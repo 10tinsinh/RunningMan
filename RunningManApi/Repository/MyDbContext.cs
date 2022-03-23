@@ -19,8 +19,6 @@ namespace RunningManApi.Repository
         }
 
         public virtual DbSet<Account> Accounts { get; set; }
-        public virtual DbSet<DetailRound> DetailRounds { get; set; }
-        public virtual DbSet<DetailTeam> DetailTeams { get; set; }
         public virtual DbSet<Game> Games { get; set; }
         public virtual DbSet<GameDetail> GameDetails { get; set; }
         public virtual DbSet<GamePlay> GamePlays { get; set; }
@@ -32,7 +30,9 @@ namespace RunningManApi.Repository
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<RolesDetail> RolesDetails { get; set; }
         public virtual DbSet<Round> Rounds { get; set; }
+        public virtual DbSet<RoundDetail> RoundDetails { get; set; }
         public virtual DbSet<Team> Teams { get; set; }
+        public virtual DbSet<TeamDetail> TeamDetails { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -52,39 +52,6 @@ namespace RunningManApi.Repository
                 entity.Property(e => e.Password).IsUnicode(false);
 
                 entity.Property(e => e.UserName).IsUnicode(false);
-            });
-
-            modelBuilder.Entity<DetailRound>(entity =>
-            {
-                entity.HasOne(d => d.Game)
-                    .WithMany(p => p.DetailRounds)
-                    .HasForeignKey(d => d.GameId)
-                    .HasConstraintName("fk_DetailRound_Game");
-
-                entity.HasOne(d => d.Round)
-                    .WithMany(p => p.DetailRounds)
-                    .HasForeignKey(d => d.RoundId)
-                    .HasConstraintName("fk_DetailRound_Round");
-
-                entity.HasOne(d => d.Team)
-                    .WithMany(p => p.DetailRounds)
-                    .HasForeignKey(d => d.TeamId)
-                    .HasConstraintName("fk_DetailRound_Team");
-            });
-
-            modelBuilder.Entity<DetailTeam>(entity =>
-            {
-                entity.HasOne(d => d.Account)
-                    .WithMany(p => p.DetailTeams)
-                    .HasForeignKey(d => d.AccountId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_DetailTeam_Account");
-
-                entity.HasOne(d => d.Team)
-                    .WithMany(p => p.DetailTeams)
-                    .HasForeignKey(d => d.TeamId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_DetailTeam_Team");
             });
 
             modelBuilder.Entity<Game>(entity =>
@@ -195,9 +162,42 @@ namespace RunningManApi.Repository
                     .HasConstraintName("fk_Round_Location");
             });
 
+            modelBuilder.Entity<RoundDetail>(entity =>
+            {
+                entity.HasOne(d => d.Game)
+                    .WithMany(p => p.RoundDetails)
+                    .HasForeignKey(d => d.GameId)
+                    .HasConstraintName("fk_RoundDetail_Game");
+
+                entity.HasOne(d => d.Round)
+                    .WithMany(p => p.RoundDetails)
+                    .HasForeignKey(d => d.RoundId)
+                    .HasConstraintName("fk_RoundDetail_Round");
+
+                entity.HasOne(d => d.Team)
+                    .WithMany(p => p.RoundDetails)
+                    .HasForeignKey(d => d.TeamId)
+                    .HasConstraintName("fk_RoundDetail_Team");
+            });
+
             modelBuilder.Entity<Team>(entity =>
             {
                 entity.Property(e => e.Rank).HasDefaultValueSql("((1))");
+            });
+
+            modelBuilder.Entity<TeamDetail>(entity =>
+            {
+                entity.HasOne(d => d.Account)
+                    .WithMany(p => p.TeamDetails)
+                    .HasForeignKey(d => d.AccountId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_TeamDetail_Account");
+
+                entity.HasOne(d => d.Team)
+                    .WithMany(p => p.TeamDetails)
+                    .HasForeignKey(d => d.TeamId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_TeamDetail_Team");
             });
 
             OnModelCreatingPartial(modelBuilder);

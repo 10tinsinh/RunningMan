@@ -142,7 +142,7 @@ namespace RunningManApi.Service
                         {
                             Success = false,
                             Message = "User has been locked",
-                            Data = GenerateToken(checkUser)
+                            Data = null
                         };
                         return result;
                     }    
@@ -153,8 +153,8 @@ namespace RunningManApi.Service
                     var result = new ApiResponse
                     {
                         Success = false,
-                        Message = "User has been locked",
-                        Data = GenerateToken(checkUser)
+                        Message = "User or Password invalid",
+                        Data = null
                     };
                     return result;
                 }    
