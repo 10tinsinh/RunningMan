@@ -10,10 +10,11 @@ namespace RunningManApi.DTO.Models
         
         
         public string Name { get; set; }
-        public int? Rank { get; set; }
+        
     }
     public class TeamIdDTO:TeamDTO
     {
         public int Id { get; set; }
+        public int? Rank { get; set; }
     }
 }
