@@ -10,6 +10,7 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using BCrypt.Net;
 
 namespace RunningManApi.Service
 {
@@ -40,11 +41,12 @@ namespace RunningManApi.Service
             {
                 throw new Exception("User invalid");
             }
+            var hashPassword = BCrypt.Net.BCrypt.HashPassword(user.Password);
 
             var addAccount = new Account
             {
                 UserName = user.Username,
-                Password = user.Password,
+                Password = hashPassword,
                 Name = user.Name,
                 Email = user.Email,
                 AccountStatus = true
@@ -52,7 +54,7 @@ namespace RunningManApi.Service
             account.CreateAccount(addAccount);
             var newUser = account.GetAccount().SingleOrDefault(us => us.UserName == addAccount.UserName);
 
-            var roleUser = role.GetRole().SingleOrDefault(x => x.RoleCode == "user");
+            var roleUser = role.GetRole().SingleOrDefault(x => x.RoleCode == "USER");
             var addRoleDetail = new RolesDetail
             {
                 AccountId = newUser.Id,
@@ -77,7 +79,6 @@ namespace RunningManApi.Service
             {
                 Id = newUser.Id,
                 Username = addAccount.UserName,
-                Password = addAccount.Password,
                 Name = addAccount.Name,
                 Email = addAccount.Email,
                 AccountStatus = addAccount.AccountStatus
@@ -109,40 +110,58 @@ namespace RunningManApi.Service
 
         public ApiResponse Login(Login login)
         {
-            var checkUser = account.GetAccount().SingleOrDefault(us => us.UserName == login.Username && us.Password == login.Password);
-            if(checkUser.AccountStatus == true)
-            {  
-                if (checkUser == null)
-                {
-                    var result = new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Username or Password invalid",
-                        Data = null
-                    };
-                    return result;
-                }
-                else 
-                { 
-                    var result = new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Loggin successfully",
-                        Data = GenerateToken(checkUser)
-                    };
-                    return result; 
-                }
-            }
-            else
+            var checkUser = account.GetAccount().SingleOrDefault(us => us.UserName == login.Username);
+
+            if (checkUser == null)
             {
                 var result = new ApiResponse
                 {
                     Success = false,
-                    Message = "User is locked",
+                    Message = "Username invalid",
                     Data = null
                 };
                 return result;
-            }    
+            }
+            else 
+            { 
+                if(BCrypt.Net.BCrypt.Verify(login.Password,checkUser.Password))
+                {
+                    if(checkUser.AccountStatus == true)
+                    {
+                        var result = new ApiResponse
+                        {
+                            Success = true,
+                            Message = "Loggin successfully",
+                            Data = GenerateToken(checkUser)
+                        };
+                        return result;
+                    }
+                    else
+                    {
+                        var result = new ApiResponse
+                        {
+                            Success = false,
+                            Message = "User has been locked",
+                            Data = GenerateToken(checkUser)
+                        };
+                        return result;
+                    }    
+                   
+                }
+                else
+                {
+                    var result = new ApiResponse
+                    {
+                        Success = false,
+                        Message = "User has been locked",
+                        Data = GenerateToken(checkUser)
+                    };
+                    return result;
+                }    
+                
+
+            }
+
         }
 
         private string GetRoleAccount(int id)
@@ -179,13 +198,14 @@ namespace RunningManApi.Service
         public void Update(int id, AccountDTO _account)
         {
             var checkId = account.GetAccount().SingleOrDefault(ac => ac.Id == id);
+            var hashPassword = BCrypt.Net.BCrypt.HashPassword(checkId.Password);
             if (checkId != null)
             {
                 var Result = new Account
                 {
                     Id = checkId.Id,
                     UserName = _account.Username,
-                    Password = _account.Password,
+                    Password = hashPassword,
                     Name = _account.Name,
                     Email = _account.Email,
                     AccountStatus = _account.AccountStatus

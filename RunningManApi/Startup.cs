@@ -67,30 +67,30 @@ namespace RunningManApi
             services.AddAuthorization(configure =>
             {
                 
-                configure.AddPolicy("Admin", policyBuilder =>
+                configure.AddPolicy(PolicyCode.ADMIN, policyBuilder =>
                 {
                     policyBuilder.RequireAuthenticatedUser();
-                    policyBuilder.AddRequirements(new RoleRequirement("admin"));
-                    policyBuilder.AddRequirements(new PermissionRequirement("RUNNING_MAN_USER_VIEW"));
+                    policyBuilder.AddRequirements(new RoleRequirement(PolicyCode.ADMIN));
+                    policyBuilder.AddRequirements(new PermissionRequirement(PermissionCode.RUNNING_MAN_USER_VIEW));
                 });
-                configure.AddPolicy("ViewUser", policyBuilder =>
+                configure.AddPolicy(PolicyCode.VIEW_USER, policyBuilder =>
                  {
                      policyBuilder.RequireAuthenticatedUser();
-                     policyBuilder.AddRequirements(new PermissionRequirement("RUNNING_MAN_USER_VIEW"));
+                     policyBuilder.AddRequirements(new PermissionRequirement(PermissionCode.RUNNING_MAN_USER_VIEW));
 
                  });
-                configure.AddPolicy("DeleteAccount", policyBuilder =>
+                configure.AddPolicy(PolicyCode.DELETE_USER, policyBuilder =>
                 {
                     policyBuilder.RequireAuthenticatedUser();
-                    policyBuilder.AddRequirements(new RoleRequirement("admin"));
-                    policyBuilder.AddRequirements(new PermissionRequirement("RUNNING_MAN_USER_DELETE"));
+                    policyBuilder.AddRequirements(new RoleRequirement(PolicyCode.ADMIN));
+                    policyBuilder.AddRequirements(new PermissionRequirement(PermissionCode.RUNNING_MAN_USER_DELETE));
 
                 });
-                configure.AddPolicy("UpdateAccount", policyBuilder =>
+                configure.AddPolicy(PolicyCode.UPDATE_USER, policyBuilder =>
                 {
                     policyBuilder.RequireAuthenticatedUser();
                     
-                    policyBuilder.AddRequirements(new PermissionRequirement("RUNNING_MAN_USER_UPDATE"));
+                    policyBuilder.AddRequirements(new PermissionRequirement(PermissionCode.RUNNING_MAN_USER_UPDATE));
 
                 });
             });

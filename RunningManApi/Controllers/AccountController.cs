@@ -24,7 +24,7 @@ namespace RunningManApi.Controllers
             _accountRepository = accountRepository;
         }
 
-        [Authorize(Policy ="Admin")]
+        [Authorize(Policy = PolicyCode.ADMIN)]
         [HttpGet("AdminSearchUser")]
         public IActionResult GetAllAccount(string usernameToken)
         {
@@ -40,7 +40,7 @@ namespace RunningManApi.Controllers
             }
         }
         
-        [Authorize(Policy = "ViewUser")]
+        [Authorize(Policy = PolicyCode.VIEW_USER)]
         [HttpGet("InformationUserLogin")]
         public IActionResult GetAccount()
         {
@@ -88,11 +88,15 @@ namespace RunningManApi.Controllers
             }
             catch
             {
-                return BadRequest();
+                return BadRequest(new ApiResponse {
+                    Success = false,
+                    Message = "Password or Username invalid"
+
+                });
             }
         }
 
-        [Authorize(Policy = "DeleteAccount")]
+        [Authorize(Policy = PolicyCode.DELETE_USER)]
         [HttpDelete]
         public IActionResult DeleteAccount(int id)
         {
@@ -116,7 +120,7 @@ namespace RunningManApi.Controllers
             }
         }
 
-        [Authorize(Policy = "UpdateAccount")]
+        [Authorize(Policy = PolicyCode.UPDATE_USER)]
         [HttpPut]
         public IActionResult UpdateAccount( AccountDTO account)
         {
