@@ -1,4 +1,5 @@
-﻿using RunningManApi.Repository.Entites;
+﻿using RunningManApi.DTO.Models;
+using RunningManApi.Repository.Entites;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,21 +17,22 @@ namespace RunningManApi.Repository
             {
                 Id = ac.Id,
                 AccountId = ac.AccountId,
-                TeamId = ac.TeamId
+                TeamId = ac.TeamId,
+                TeamLead = ac.TeamLead
 
             });
             return teamDetail.ToList();
         }
 
-        public void CreateTeamDetail(TeamDetail teamDetail)
+        public void CreateTeamDetail(TeamDetailDTO teamDetail)
         {
             var dataBase = new MyDbContext();
             var _teamDetail = new TeamDetail
             {
                 Id = teamDetail.Id,
                 AccountId = teamDetail.AccountId,
-                TeamId = teamDetail.TeamId
-                
+                TeamId = teamDetail.TeamId,
+                TeamLead = teamDetail.TeamLead
             };
             dataBase.Add(_teamDetail);
             dataBase.SaveChanges();

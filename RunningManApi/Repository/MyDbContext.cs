@@ -187,6 +187,8 @@ namespace RunningManApi.Repository
 
             modelBuilder.Entity<TeamDetail>(entity =>
             {
+                entity.Property(e => e.TeamLead).HasDefaultValueSql("((1))");
+
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.TeamDetails)
                     .HasForeignKey(d => d.AccountId)

@@ -12,5 +12,7 @@ namespace RunningManApi.DTO.Models
         public int TeamId { get; set; }
         
         public int AccountId { get; set; }
+
+        public bool? TeamLead { get; set; }
     }
 }

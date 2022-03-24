@@ -18,14 +18,58 @@ namespace RunningManApi.Service
             teamData = new TeamDataAccess();
             teamDetail = new DetailTeamDataAccess();
         }
-        public Team CreateNewTeam(TeamDTO team)
+        public TeamIdDTO CreateNewTeam(int id,TeamDTO team)
         {
-            throw new NotImplementedException();
+            var checkTeam = teamData.GetTeam().SingleOrDefault(x => x.Name == team.Name);
+            if (checkTeam != null)
+            {
+                throw new Exception("User invalid");
+            }
+            var _team = new TeamDTO
+            {
+                Name = team.Name
+            };
+            teamData.CreateTeam(_team);
+            var newTeam = teamData.GetTeam().SingleOrDefault(x => x.Name == team.Name);
+            var newTeamDetail = new TeamDetailDTO
+            {
+                AccountId = id,
+                TeamId = newTeam.Id,
+                TeamLead = true
+                
+
+            };
+            teamDetail.CreateTeamDetail(newTeamDetail);
+
+
+            return new TeamIdDTO
+            {
+                Id = newTeam.Id,
+                Name = newTeam.Name,
+                Rank = newTeam.Rank
+            };
+
         }
 
-        public void DeleteTeam(int id)
+        public void DeleteTeam(int id, string teamName)
         {
-            throw new NotImplementedException();
+            var checkTeam = teamData.GetTeam().SingleOrDefault(x => x.Name == teamName);
+            if (checkTeam == null )
+            {
+                throw new Exception();
+            }
+            var checkTeamDetail = teamDetail.GetTeamDetail().SingleOrDefault(x => x.AccountId == id && x.TeamId == checkTeam.Id);
+            if( checkTeamDetail == null)
+            {
+                throw new Exception();
+            }    
+            teamDetail.DeleteTeamDetail(checkTeamDetail.Id);
+            var checkTeamExist = teamDetail.GetTeamDetail().SingleOrDefault(x => x.TeamId == checkTeam.Id);
+            if(checkTeamExist == null)
+            {
+                teamData.DeleteTeam(checkTeam.Id);
+            }    
+            
         }
 
         public List<TeamIdDTO> GetTeam(int user)
@@ -71,6 +115,27 @@ namespace RunningManApi.Service
         public void UpdateTeam(TeamIdDTO team)
         {
             throw new NotImplementedException();
+        }
+
+        public void JoinTeam(int id, string team)
+        {
+            var checkTeam = teamData.GetTeam().SingleOrDefault(x => x.Name == team);
+            if(checkTeam == null)
+            {
+                throw new Exception();
+            }
+            var checkTeamDetail = teamDetail.GetTeamDetail().SingleOrDefault(x => x.TeamId == checkTeam.Id && x.AccountId == id);
+            if(checkTeamDetail != null)
+            {
+                throw new Exception();
+            }
+            var _teamDetail = new TeamDetailDTO
+            {
+                AccountId = id,
+                TeamId = checkTeam.Id,
+                TeamLead = false
+            };
+            teamDetail.CreateTeamDetail(_teamDetail);
         }
     }
 }

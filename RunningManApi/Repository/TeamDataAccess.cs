@@ -1,4 +1,5 @@
-﻿using RunningManApi.Repository.Entites;
+﻿using RunningManApi.DTO.Models;
+using RunningManApi.Repository.Entites;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,12 +23,12 @@ namespace RunningManApi.Repository
             return team.ToList();
         }
 
-        public void CreateTeam(Team team)
+        public void CreateTeam(TeamDTO team)
         {
             var dataBase = new MyDbContext();
             var _team = new Team
             {
-                Id = team.Id,
+                
                 Name = team.Name
             };
             dataBase.Add(_team);
@@ -46,7 +47,7 @@ namespace RunningManApi.Repository
             }
         }
 
-        public void DeleteRole(int id)
+        public void DeleteTeam(int id)
         {
             var dataBase = new MyDbContext();
             var _team = dataBase.Teams.SingleOrDefault(x => x.Id == id);
