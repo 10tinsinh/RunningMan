@@ -46,6 +46,7 @@ namespace RunningManApi.Repository
             {
                 _teamDetail.TeamId = teamDetail.TeamId;
                 _teamDetail.AccountId = teamDetail.AccountId;
+                _teamDetail.TeamLead = teamDetail.TeamLead;
                     
                 dataBase.SaveChanges();
             }

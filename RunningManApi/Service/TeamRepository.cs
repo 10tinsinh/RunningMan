@@ -64,10 +64,24 @@ namespace RunningManApi.Service
                 throw new Exception();
             }    
             teamDetail.DeleteTeamDetail(checkTeamDetail.Id);
-            var checkTeamExist = teamDetail.GetTeamDetail().SingleOrDefault(x => x.TeamId == checkTeam.Id);
+            var checkTeamExist = teamDetail.GetTeamDetail().FirstOrDefault(x => x.TeamId == checkTeam.Id);
             if(checkTeamExist == null)
             {
                 teamData.DeleteTeam(checkTeam.Id);
+            }    
+            else
+            {
+                if(checkTeamDetail.TeamLead == true)
+                {
+                    var result = new TeamDetail
+                    {
+                        AccountId = checkTeamExist.AccountId,
+                        TeamId = checkTeamExist.TeamId,
+                        TeamLead = true
+                    };
+                    teamDetail.UpdateTeamDetail(checkTeamExist.Id, result);
+                }
+                
             }    
             
         }
