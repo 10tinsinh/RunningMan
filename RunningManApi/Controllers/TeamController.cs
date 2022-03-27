@@ -109,6 +109,53 @@ namespace RunningManApi.Controllers
             }
         }
 
+        [Authorize]
+        [HttpPost("AddMember")]
+        public IActionResult AddMember(string member, string team)
+        {
+            var identity = User.Claims.FirstOrDefault(x => x.Type.Equals("Id"));
+            var idUser = identity.Value;
+            try
+            {
+                return Ok(_teamRepository.AddMemberIntoTeam(int.Parse(idUser), member, team));
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [Authorize]
+        [HttpDelete("KickMember")]
+        public IActionResult KickMember(string member, string team)
+        {
+            var identity = User.Claims.FirstOrDefault(x => x.Type.Equals("Id"));
+            var idUser = identity.Value;
+            try
+            {
+                return Ok(_teamRepository.KickMember(int.Parse(idUser), member, team));
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+        [Authorize]
+        [HttpPut("UpdateTeam")]
+        public IActionResult UpdateTeam(string nameTeam, TeamDTO team)
+        {
+            var identity = User.Claims.FirstOrDefault(x => x.Type.Equals("Id"));
+            var idUser = identity.Value;
+            try
+            {
+                _teamRepository.UpdateTeam(int.Parse(idUser), nameTeam, team);
+                return Ok();
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
 
     }
 }

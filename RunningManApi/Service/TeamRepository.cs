@@ -12,11 +12,13 @@ namespace RunningManApi.Service
     {
         private readonly TeamDataAccess teamData;
         private readonly DetailTeamDataAccess teamDetail;
+        private readonly UserDataAccess Account;
 
         public TeamRepository()
         {
             teamData = new TeamDataAccess();
             teamDetail = new DetailTeamDataAccess();
+            Account = new UserDataAccess();
         }
         public TeamIdDTO CreateNewTeam(int id,TeamDTO team)
         {
@@ -126,9 +128,28 @@ namespace RunningManApi.Service
 
         }
 
-        public void UpdateTeam(TeamIdDTO team)
+        public void UpdateTeam(int idUser,string nameTeam,TeamDTO team)
         {
-            throw new NotImplementedException();
+            var checkTeam = teamData.GetTeam().SingleOrDefault(x => x.Name == nameTeam);
+            if(checkTeam == null)
+            {
+                throw new Exception
+                {
+                    Source = "Team not exist"
+                };
+            }
+            var checkTeamLead = teamDetail.GetTeamDetail().SingleOrDefault(x => x.AccountId == idUser && x.TeamId == checkTeam.Id && x.TeamLead == true);
+            if (checkTeamLead == null)
+            {
+                throw new Exception{
+                    Source = "You don't have Leader of team " + nameTeam
+                };
+            }
+            var updateTeam = new Team
+            {
+                Name = team.Name
+            };
+            teamData.UpdateTeam(checkTeam.Id, updateTeam);
         }
 
         public void JoinTeam(int id, string team)
@@ -151,5 +172,109 @@ namespace RunningManApi.Service
             };
             teamDetail.CreateTeamDetail(_teamDetail);
         }
+
+        public ApiResponse AddMemberIntoTeam(int idTeamLead, string user, string team)
+        {
+            var checkUser = Account.GetAccount().SingleOrDefault(x => x.UserName == user);
+            if (checkUser == null)
+            {
+                return new ApiResponse
+                {
+                    Success = false,
+                    Message = "Username not exist"
+                };
+            }
+            var checkTeam = teamData.GetTeam().SingleOrDefault(x => x.Name == team);
+            if (checkTeam == null)
+            {
+                return new ApiResponse
+                {
+                    Success = false,
+                    Message = "Team not exist"
+                };
+            }
+            var checkTeamDetail = teamDetail.GetTeamDetail().SingleOrDefault(x => x.TeamId == checkTeam.Id && x.AccountId == checkUser.Id);
+            if (checkTeamDetail != null)
+            {
+                return new ApiResponse
+                {
+                    Success = false,
+                    Message = "User already exist in the team"
+                };
+            }
+            var chackTeamLead = teamDetail.GetTeamDetail().SingleOrDefault(x => x.TeamId == checkTeam.Id && x.AccountId == idTeamLead && x.TeamLead == true);
+            if (chackTeamLead == null)
+            {
+                return new ApiResponse
+                {
+                    Success = false,
+                    Message = "You don't have Leader of team " + team
+                };
+            }
+
+            var _teamDetail = new TeamDetailDTO
+            {
+                AccountId = checkUser.Id,
+                TeamId = checkTeam.Id,
+                TeamLead = false
+            };
+            teamDetail.CreateTeamDetail(_teamDetail);
+            return new ApiResponse
+            {
+                Success = true,
+                Message = "Add member successfully into" + team
+            };
+        }
+        public ApiResponse KickMember(int idTeamLead, string user, string team)
+        {
+            var checkUser = Account.GetAccount().SingleOrDefault(x => x.UserName == user);
+            if (checkUser == null)
+            {
+                return new ApiResponse
+                {
+                    Success = false,
+                    Message = "Username not exist"
+                };
+            }
+            var checkTeam = teamData.GetTeam().SingleOrDefault(x => x.Name == team);
+            if (checkTeam == null)
+            {
+                return new ApiResponse
+                {
+                    Success = false,
+                    Message = "Team not exist"
+                };
+            }
+            var checkTeamDetail = teamDetail.GetTeamDetail().SingleOrDefault(x => x.TeamId == checkTeam.Id && x.AccountId == checkUser.Id);
+            if (checkTeamDetail == null)
+            {
+                return new ApiResponse
+                {
+                    Success = false,
+                    Message = "User does not exist in the team"
+                };
+            }
+            var chackTeamLead = teamDetail.GetTeamDetail().SingleOrDefault(x => x.TeamId == checkTeam.Id && x.AccountId == idTeamLead && x.TeamLead == true);
+            if (chackTeamLead == null)
+            {
+                return new ApiResponse
+                {
+                    Success = false,
+                    Message = "You don't have Leader of team " + team
+                };
+            }
+            if(checkUser.Id == idTeamLead)
+            {
+                throw new Exception();
+            }
+            teamDetail.DeleteTeamDetail(checkTeamDetail.Id);
+            return new ApiResponse
+            {
+                Success = true,
+                Message = "Kick member " + user + " successfully"
+            };
+        }
+
+
     }
 }
