@@ -12,13 +12,17 @@ namespace RunningManApi.Service
     {
         private readonly TeamDataAccess teamData;
         private readonly DetailTeamDataAccess teamDetail;
-        private readonly UserDataAccess Account;
+        private readonly UserDataAccess account;
+        private readonly PermissionDataAccess permission;
+        private readonly DetailPermissionDataAccess detailPermission;
 
         public TeamRepository()
         {
             teamData = new TeamDataAccess();
             teamDetail = new DetailTeamDataAccess();
-            Account = new UserDataAccess();
+            account = new UserDataAccess();
+            permission = new PermissionDataAccess();
+            detailPermission = new DetailPermissionDataAccess();
         }
         public TeamIdDTO CreateNewTeam(int id,TeamDTO team)
         {
@@ -42,7 +46,23 @@ namespace RunningManApi.Service
 
             };
             teamDetail.CreateTeamDetail(newTeamDetail);
+            var permissionUser = permission.GetPermission().Where(x =>  x.PermissionCode == "RUNNING_MAN_TEAM_LEADER");
 
+
+            foreach (int temp in permissionUser.Select(x => x.Id))
+            {
+                var checkPermissionDetail = detailPermission.GetDetailPermission().Where(x => x.PermissionId == temp && x.AccountId == id);
+                if (!checkPermissionDetail.Any())
+                {
+                    var addPermissionDetail = new PermissionDetail
+                    {
+                        AccountId = id,
+                        PermissionId = temp
+                    };
+                    detailPermission.CreatePermissionDetail(addPermissionDetail);
+                }
+
+            }
 
             return new TeamIdDTO
             {
@@ -171,11 +191,28 @@ namespace RunningManApi.Service
                 TeamLead = false
             };
             teamDetail.CreateTeamDetail(_teamDetail);
+            var permissionUser = permission.GetPermission().Where(x => x.PermissionCode == "RUNNING_MAN_TEAM_MEMBER");
+
+
+            foreach (int temp in permissionUser.Select(x => x.Id))
+            {
+                var checkPermissionDetail = detailPermission.GetDetailPermission().Where(x => x.PermissionId == temp && x.AccountId == id);
+                if (!checkPermissionDetail.Any())
+                {
+                    var addPermissionDetail = new PermissionDetail
+                    {
+                        AccountId = id,
+                        PermissionId = temp
+                    };
+                    detailPermission.CreatePermissionDetail(addPermissionDetail);
+                }
+
+            }
         }
 
         public ApiResponse AddMemberIntoTeam(int idTeamLead, string user, string team)
         {
-            var checkUser = Account.GetAccount().SingleOrDefault(x => x.UserName == user);
+            var checkUser = account.GetAccount().SingleOrDefault(x => x.UserName == user);
             if (checkUser == null)
             {
                 return new ApiResponse
@@ -219,6 +256,23 @@ namespace RunningManApi.Service
                 TeamLead = false
             };
             teamDetail.CreateTeamDetail(_teamDetail);
+           
+            var permissionUser = permission.GetPermission().Where(x => x.PermissionCode == "RUNNING_MAN_TEAM_MEMBER");
+            foreach (int temp in permissionUser.Select(x => x.Id))
+            {
+                var checkPermissionDetail = detailPermission.GetDetailPermission().Where(x => x.PermissionId == temp && x.AccountId == checkUser.Id);
+                if (!checkPermissionDetail.Any())
+                {
+                    var addPermissionDetail = new PermissionDetail
+                    {
+                        AccountId = checkUser.Id,
+                        PermissionId = temp
+                    };
+                    detailPermission.CreatePermissionDetail(addPermissionDetail);
+                }
+
+            }
+
             return new ApiResponse
             {
                 Success = true,
@@ -227,7 +281,7 @@ namespace RunningManApi.Service
         }
         public ApiResponse KickMember(int idTeamLead, string user, string team)
         {
-            var checkUser = Account.GetAccount().SingleOrDefault(x => x.UserName == user);
+            var checkUser = account.GetAccount().SingleOrDefault(x => x.UserName == user);
             if (checkUser == null)
             {
                 return new ApiResponse
@@ -275,6 +329,196 @@ namespace RunningManApi.Service
             };
         }
 
+        public ApiResponse ResignTeamLead(int idTeamLead, string user, string team)
+        {
+            var checkUser = account.GetAccount().SingleOrDefault(x => x.UserName == user);
+            if (checkUser == null)
+            {
+                return new ApiResponse
+                {
+                    Success = false,
+                    Message = "Username not exist"
+                };
+            }
+            var checkTeam = teamData.GetTeam().SingleOrDefault(x => x.Name == team);
+            if (checkTeam == null)
+            {
+                return new ApiResponse
+                {
+                    Success = false,
+                    Message = "Team not exist"
+                };
+            }
+            var checkTeamDetail = teamDetail.GetTeamDetail().SingleOrDefault(x => x.TeamId == checkTeam.Id && x.AccountId == checkUser.Id);
+            if (checkTeamDetail == null)
+            {
+                return new ApiResponse
+                {
+                    Success = false,
+                    Message = "User does not exist in the team"
+                };
+            }
+            var checkTeamLead = teamDetail.GetTeamDetail().SingleOrDefault(x => x.TeamId == checkTeam.Id && x.AccountId == idTeamLead && x.TeamLead == true);
+            if (checkTeamLead == null)
+            {
+                return new ApiResponse
+                {
+                    Success = false,
+                    Message = "You don't have Leader of team " + team
+                };
+            }
+            if (checkUser.Id == idTeamLead)
+            {
+                throw new Exception();
+            }
+            var insertTeamLead = new TeamDetail
+            {
+               
+                AccountId = checkTeamDetail.AccountId,
+                TeamId = checkTeamDetail.TeamId,
+                TeamLead = true
+            };
+            teamDetail.UpdateTeamDetail(checkTeamDetail.Id, insertTeamLead);
+            var resignTeamLead = new TeamDetail
+            {
+                AccountId = checkTeamLead.AccountId,
+                TeamId = checkTeamLead.TeamId,
+                TeamLead = false
+            };
+            teamDetail.UpdateTeamDetail(checkTeamLead.Id, resignTeamLead);
 
+            var permissionUserMember = permission.GetPermission().SingleOrDefault(x => x.PermissionCode == "RUNNING_MAN_TEAM_MEMBER");
+            var permissionUserLeader = permission.GetPermission().SingleOrDefault(x => x.PermissionCode == "RUNNING_MAN_TEAM_LEADER");
+            #region change permission Leader Old
+            //check if user has different team leader
+            var checkLeader = teamDetail.GetTeamDetail().Where(x => x.AccountId == checkTeamLead.AccountId && x.TeamLead == true);
+            if (!checkLeader.Any())
+            {
+               
+                var checkPermissionDetail = detailPermission.GetDetailPermission().SingleOrDefault(x => x.PermissionId == permissionUserMember.Id && x.AccountId == checkTeamLead.AccountId);
+                var checkPermissionLeader = detailPermission.GetDetailPermission().SingleOrDefault(x => x.PermissionId == permissionUserLeader.Id && x.AccountId == checkTeamLead.AccountId);
+                int idLeader = checkPermissionLeader.Id;
+                if (checkPermissionDetail == null)//don't have checkPermissionDetail
+                {
+                        
+                    var addPermissionDetail = new PermissionDetail
+                    {
+                        AccountId = checkTeamLead.AccountId,
+                        PermissionId = permissionUserMember.Id
+                    };
+                    detailPermission.UpdatePermissionDetail(idLeader,addPermissionDetail);
+                }
+                else
+                {
+                        
+                    detailPermission.DeletePermissionDetail(idLeader);
+                }    
+
+                
+
+
+            }    
+            else
+            {
+
+
+                var checkPermissionDetail = detailPermission.GetDetailPermission().SingleOrDefault(x => x.PermissionId == permissionUserMember.Id && x.AccountId == checkTeamLead.AccountId);
+                if (checkPermissionDetail == null)//don't have checkPermissionDetail
+                {
+
+                    var addPermissionDetail = new PermissionDetail
+                    {
+                        AccountId = checkTeamLead.AccountId,
+                        PermissionId = permissionUserMember.Id
+                    };
+                    detailPermission.CreatePermissionDetail(addPermissionDetail);
+                }
+            }
+            #endregion
+
+            #region change permission Leader new
+
+            var checkMember = teamDetail.GetTeamDetail().Where(x => x.AccountId == checkTeamDetail.AccountId && x.TeamLead == false);
+            if (!checkMember.Any())
+            {
+
+                var checkPermissionDetail = detailPermission.GetDetailPermission().SingleOrDefault(x => x.PermissionId == permissionUserMember.Id && x.AccountId == checkTeamDetail.AccountId);
+                var checkPermissionLeader = detailPermission.GetDetailPermission().SingleOrDefault(x => x.PermissionId == permissionUserLeader.Id && x.AccountId == checkTeamDetail.AccountId);
+                int idMember = checkPermissionDetail.Id;
+                if (checkPermissionLeader == null)//don't have checkPermissionDetail
+                {
+
+                    var addPermissionDetail = new PermissionDetail
+                    {
+                        AccountId = checkTeamDetail.AccountId,
+                        PermissionId = permissionUserLeader.Id
+                    };
+                    detailPermission.UpdatePermissionDetail(idMember, addPermissionDetail);
+                }
+                else
+                {
+
+                    detailPermission.DeletePermissionDetail(idMember);
+                }
+
+            }
+            else
+            {
+                var checkPermissionLeader = detailPermission.GetDetailPermission().SingleOrDefault(x => x.PermissionId == permissionUserLeader.Id && x.AccountId == checkTeamDetail.AccountId);
+               
+                if (checkPermissionLeader == null)//don't have checkPermissionDetail
+                {
+
+                    var addPermissionDetail = new PermissionDetail
+                    {
+                        AccountId = checkTeamDetail.AccountId,
+                        PermissionId = permissionUserLeader.Id
+                    };
+                    detailPermission.CreatePermissionDetail(addPermissionDetail);
+                }
+            }
+
+            #endregion
+
+            return new ApiResponse
+            {
+                Success = true,
+                Message = "Resign Team Lead Successfully"
+            };
+        }
+
+        public List<MemberDTO> ShowAllMember(int idTeamLead, string team)
+        {
+            var checkTeam = teamData.GetTeam().SingleOrDefault(x => x.Name == team);
+            if (checkTeam == null)
+            {
+                throw new Exception();
+            }
+            var checkMember= teamDetail.GetTeamDetail().SingleOrDefault(x => x.TeamId == checkTeam.Id && x.AccountId == idTeamLead);
+            if (checkMember == null)
+            {
+                throw new Exception();
+            }
+            var checkTeamDetail = teamDetail.GetTeamDetail().Where(x => x.TeamId == checkTeam.Id);
+            var getUser = account.GetAccount().AsQueryable();
+            var username = checkTeamDetail.Join(getUser, p => p.AccountId, c => c.Id, (p, c) => new
+            {
+                c.UserName,
+                c.Name
+            });
+
+            var result = username.Select(x => new MemberDTO
+            {
+                Username = x.UserName,
+                Name = x.Name
+            });
+
+
+
+
+            return result.ToList();
+            
+
+        }
     }
 }

@@ -62,7 +62,12 @@ namespace RunningManApi.Service
             };
             detailRole.CreateRoleDetail(addRoleDetail);
 
-            var permissionUser = permission.GetPermission().Where(x => x.PermissionCode == "RUNNING_MAN_USER_VIEW" || x.PermissionCode == "RUNNING_MAN_USER_UPDATE");
+            var permissionUser = permission.GetPermission().Where(x => x.PermissionCode == "RUNNING_MAN_USER_VIEW" 
+            || x.PermissionCode == "RUNNING_MAN_USER_UPDATE"
+            || x.PermissionCode == "RUNNING_MAN_TEAM_JOIN"
+            || x.PermissionCode == "RUNNING_MAN_TEAM_CREATE");
+           
+            
             foreach (int temp in permissionUser.Select(x=>x.Id))
             {
                 var addPermissionDetail = new PermissionDetail

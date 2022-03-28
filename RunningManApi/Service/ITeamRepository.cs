@@ -18,5 +18,8 @@ namespace RunningManApi.Service
         ApiResponse AddMemberIntoTeam(int idTeamLead, string user, string team);
         ApiResponse KickMember(int idTeamLead, string user, string team);
 
+        ApiResponse ResignTeamLead(int idTeamLead, string user, string team);
+        List<MemberDTO> ShowAllMember(int idTeamLead, string team);
+
     }
 }

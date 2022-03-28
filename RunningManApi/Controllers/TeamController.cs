@@ -157,5 +157,38 @@ namespace RunningManApi.Controllers
             }
         }
 
+        [Authorize]
+        [HttpPut("ResignTeamLead")]
+        public IActionResult ResignTeamLead(string member, string team)
+        {
+            var identity = User.Claims.FirstOrDefault(x => x.Type.Equals("Id"));
+            var idUser = identity.Value;
+            try
+            {
+                return Ok(_teamRepository.ResignTeamLead(int.Parse(idUser), member, team));
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [Authorize]
+        [HttpGet("GetMember")]
+        public IActionResult GetMember (string team)
+        {
+            var identity = User.Claims.FirstOrDefault(x => x.Type.Equals("Id"));
+            var idUser = identity.Value;
+            try
+            {
+                return Ok(_teamRepository.ShowAllMember(int.Parse(idUser), team));
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+
     }
 }

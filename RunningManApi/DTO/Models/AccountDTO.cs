@@ -28,6 +28,11 @@ namespace RunningManApi.DTO.Models
 
         public string Password { get; set; }
     }
+    public class MemberDTO
+    {
+        public string Username { get; set; }
+        public string Name { get; set; }
+    }
    
         
 }
