@@ -16,5 +16,6 @@ namespace RunningManApi.DTO.Models
     {
         public int Id { get; set; }
         public int? Rank { get; set; }
+        public bool? TeamLead { get; set; }
     }
 }
