@@ -38,7 +38,7 @@ namespace RunningManApi.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Policy =PolicyCode.CREATE_TEAM)]
         [HttpPost("CreateATeam")]
         public IActionResult CreateTeam(TeamDTO team)
         {
@@ -82,7 +82,7 @@ namespace RunningManApi.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Policy =PolicyCode.JOIN_TEAM)]
         [HttpPost("JoinTeam")]
         public IActionResult JoinTeam(string team)
         {
@@ -109,7 +109,7 @@ namespace RunningManApi.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Policy =PolicyCode.TEAM_LEAD)]
         [HttpPost("AddMember")]
         public IActionResult AddMember(string member, string team)
         {
@@ -125,7 +125,7 @@ namespace RunningManApi.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Policy = PolicyCode.TEAM_LEAD)]
         [HttpDelete("KickMember")]
         public IActionResult KickMember(string member, string team)
         {
@@ -140,7 +140,7 @@ namespace RunningManApi.Controllers
                 return BadRequest();
             }
         }
-        [Authorize]
+        [Authorize(Policy = PolicyCode.TEAM_LEAD)]
         [HttpPut("UpdateTeam")]
         public IActionResult UpdateTeam(string nameTeam, TeamDTO team)
         {
@@ -157,7 +157,7 @@ namespace RunningManApi.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Policy = PolicyCode.TEAM_LEAD)]
         [HttpPut("ResignTeamLead")]
         public IActionResult ResignTeamLead(string member, string team)
         {
@@ -173,7 +173,7 @@ namespace RunningManApi.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Policy = PolicyCode.TEAM_LEAD)]
         [HttpGet("GetMember")]
         public IActionResult GetMember (string team)
         {

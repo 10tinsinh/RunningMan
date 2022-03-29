@@ -67,7 +67,7 @@ namespace RunningManApi
             /*Authorization filter */
             services.AddAuthorization(configure =>
             {
-                
+                #region Filter User
                 configure.AddPolicy(PolicyCode.ADMIN, policyBuilder =>
                 {
                     policyBuilder.RequireAuthenticatedUser();
@@ -75,11 +75,11 @@ namespace RunningManApi
                     policyBuilder.AddRequirements(new PermissionRequirement(PermissionCode.RUNNING_MAN_USER_VIEW));
                 });
                 configure.AddPolicy(PolicyCode.VIEW_USER, policyBuilder =>
-                 {
-                     policyBuilder.RequireAuthenticatedUser();
-                     policyBuilder.AddRequirements(new PermissionRequirement(PermissionCode.RUNNING_MAN_USER_VIEW));
+                {
+                    policyBuilder.RequireAuthenticatedUser();
+                    policyBuilder.AddRequirements(new PermissionRequirement(PermissionCode.RUNNING_MAN_USER_VIEW));
 
-                 });
+                });
                 configure.AddPolicy(PolicyCode.DELETE_USER, policyBuilder =>
                 {
                     policyBuilder.RequireAuthenticatedUser();
@@ -90,10 +90,31 @@ namespace RunningManApi
                 configure.AddPolicy(PolicyCode.UPDATE_USER, policyBuilder =>
                 {
                     policyBuilder.RequireAuthenticatedUser();
-                    
+
                     policyBuilder.AddRequirements(new PermissionRequirement(PermissionCode.RUNNING_MAN_USER_UPDATE));
 
                 });
+                #endregion
+
+                #region Filter Team
+                configure.AddPolicy(PolicyCode.CREATE_TEAM, policyBuilder =>
+                {
+                    policyBuilder.RequireAuthenticatedUser();
+                    policyBuilder.AddRequirements(new PermissionRequirement(PermissionCode.RUNNING_MAN_TEAM_CREATE));
+                });
+                configure.AddPolicy(PolicyCode.TEAM_LEAD, policyBuilder =>
+                {
+                    policyBuilder.RequireAuthenticatedUser();
+                    policyBuilder.AddRequirements(new PermissionRequirement(PermissionCode.RUNNING_MAN_TEAM_LEADER));
+                });
+                configure.AddPolicy(PolicyCode.JOIN_TEAM, policyBuilder =>
+                {
+                    policyBuilder.RequireAuthenticatedUser();
+                    policyBuilder.AddRequirements(new PermissionRequirement(PermissionCode.RUNNING_MAN_TEAM_JOIN));
+                });
+                
+                #endregion
+
             });
 
             services.AddSingleton<IRoleRepository, RoleRepository>();
