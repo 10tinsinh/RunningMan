@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore;
 namespace RunningManApi.Repository.Entites
 {
     [Table("Account")]
-    [Index(nameof(Id), Name = "UQ__Account__3214EC0605A31C3A", IsUnique = true)]
-    [Index(nameof(UserName), Name = "UQ__Account__C9F284561CE73400", IsUnique = true)]
+    [Index(nameof(Id), Name = "UQ__Account__3214EC06A587547A", IsUnique = true)]
+    [Index(nameof(UserName), Name = "UQ__Account__C9F284560F379E6F", IsUnique = true)]
     public partial class Account
     {
         public Account()
