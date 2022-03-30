@@ -21,7 +21,7 @@ namespace RunningManApi.Controllers
             _teamRepository = teamRepository;
         }
 
-        [Authorize]
+        [Authorize(Policy = PolicyCode.TEAM_MEMBER)]
         [HttpGet("GetTeamUserLogin")]
         public IActionResult GetTeamUserLogin()
         {
@@ -55,7 +55,7 @@ namespace RunningManApi.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Policy = PolicyCode.TEAM_MEMBER)]
         [HttpDelete("LeaveTeam")]
         public IActionResult LeaveTeam(string team)
         {

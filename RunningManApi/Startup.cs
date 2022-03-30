@@ -107,6 +107,11 @@ namespace RunningManApi
                     policyBuilder.RequireAuthenticatedUser();
                     policyBuilder.AddRequirements(new PermissionRequirement(PermissionCode.RUNNING_MAN_TEAM_LEADER));
                 });
+                configure.AddPolicy(PolicyCode.TEAM_MEMBER, policyBuilder =>
+                {
+                    policyBuilder.RequireAuthenticatedUser();
+                    policyBuilder.AddRequirements(new PermissionRequirement(PermissionCode.RUNNING_MAN_TEAM_MEMBER));
+                });
                 configure.AddPolicy(PolicyCode.JOIN_TEAM, policyBuilder =>
                 {
                     policyBuilder.RequireAuthenticatedUser();
