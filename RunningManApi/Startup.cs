@@ -39,6 +39,7 @@ namespace RunningManApi
 
             services.AddControllers();
             services.AddScoped<ITeamRepository, TeamRepository>();
+            services.AddScoped<IGameTypeRepository, GameTypeRepository>();
             services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddSingleton<IPermissionRepository, PermissionRepository>();
             
