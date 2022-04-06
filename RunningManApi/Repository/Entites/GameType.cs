@@ -9,12 +9,12 @@ using Microsoft.EntityFrameworkCore;
 namespace RunningManApi.Repository.Entites
 {
     [Table("GameType")]
-    [Index(nameof(Id), Name = "UQ__GameType__3214EC0640C12F22", IsUnique = true)]
+    [Index(nameof(Id), Name = "UQ__GameType__3214EC06D8D9C154", IsUnique = true)]
     public partial class GameType
     {
         public GameType()
         {
-            GameDetails = new HashSet<GameDetail>();
+            Games = new HashSet<Game>();
         }
 
         [Key]
@@ -22,7 +22,7 @@ namespace RunningManApi.Repository.Entites
         [StringLength(50)]
         public string Name { get; set; }
 
-        [InverseProperty(nameof(GameDetail.GameType))]
-        public virtual ICollection<GameDetail> GameDetails { get; set; }
+        [InverseProperty(nameof(Game.GameType))]
+        public virtual ICollection<Game> Games { get; set; }
     }
 }

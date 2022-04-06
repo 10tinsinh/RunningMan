@@ -10,6 +10,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using RunningManApi.Helpers;
+using Microsoft.AspNet.OData;
 
 namespace RunningManApi.Controllers
 {
@@ -26,6 +27,7 @@ namespace RunningManApi.Controllers
 
         [Authorize(Policy = PolicyCode.ADMIN)]
         [HttpGet("AdminSearchUser")]
+        [EnableQuery]
         public IActionResult GetAllAccount(string usernameToken)
         {
            

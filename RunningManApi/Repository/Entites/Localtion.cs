@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace RunningManApi.Repository.Entites
 {
     [Table("Localtion")]
-    [Index(nameof(Id), Name = "UQ__Localtio__3214EC069DA3ACB2", IsUnique = true)]
+    [Index(nameof(Id), Name = "UQ__Localtio__3214EC06F6460874", IsUnique = true)]
     public partial class Localtion
     {
         public Localtion()

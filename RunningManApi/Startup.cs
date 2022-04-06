@@ -1,3 +1,4 @@
+using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -41,9 +42,12 @@ namespace RunningManApi
             services.AddScoped<ITeamRepository, TeamRepository>();
             services.AddScoped<IGameTypeRepository, GameTypeRepository>();
             services.AddScoped<IAccountRepository, AccountRepository>();
+            services.AddScoped<IGameRepository, GameRepository>();
             services.AddSingleton<IPermissionRepository, PermissionRepository>();
-            
-            
+
+
+            services.AddOData();
+
             services.Configure<AppSetting>(Configuration.GetSection("AppSettings"));
             var secretKey = Configuration["AppSettings:SecretKey"];
             var secretKeyBytes = Encoding.UTF8.GetBytes(secretKey);
@@ -154,6 +158,8 @@ namespace RunningManApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.EnableDependencyInjection();
+                endpoints.Select().Count().Filter().OrderBy().MaxTop(100).SkipToken().Expand();
             });
         }
     }

@@ -20,7 +20,6 @@ namespace RunningManApi.Repository
 
         public virtual DbSet<Account> Accounts { get; set; }
         public virtual DbSet<Game> Games { get; set; }
-        public virtual DbSet<GameDetail> GameDetails { get; set; }
         public virtual DbSet<GamePlay> GamePlays { get; set; }
         public virtual DbSet<GameType> GameTypes { get; set; }
         public virtual DbSet<Localtion> Localtions { get; set; }
@@ -62,24 +61,12 @@ namespace RunningManApi.Repository
                     .WithMany(p => p.Games)
                     .HasForeignKey(d => d.AccountId)
                     .HasConstraintName("fk_Game_Account");
-            });
-
-            modelBuilder.Entity<GameDetail>(entity =>
-            {
-                entity.HasKey(e => new { e.GameId, e.GameTypeId })
-                    .HasName("pk_GameDetail");
-
-                entity.HasOne(d => d.Game)
-                    .WithMany(p => p.GameDetails)
-                    .HasForeignKey(d => d.GameId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_GameDetail_Game");
 
                 entity.HasOne(d => d.GameType)
-                    .WithMany(p => p.GameDetails)
+                    .WithMany(p => p.Games)
                     .HasForeignKey(d => d.GameTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_GameDetail_GameType");
+                    .HasConstraintName("fk_Game_GameType");
             });
 
             modelBuilder.Entity<GamePlay>(entity =>

@@ -17,7 +17,10 @@ namespace RunningManApi.Repository
                 Id = x.Id,
                 Name = x.Name,
                 Level =x.Level,
-                AccountId=x.AccountId
+                AccountId=x.AccountId,
+                GameTypeId = x.GameTypeId,
+                GameRules = x.GameRules
+                
             });
             return game.ToList();
         }
@@ -28,7 +31,9 @@ namespace RunningManApi.Repository
             var _game = new Game
             {
                 Name = game.Name,
-                AccountId = game.AccountId
+                AccountId = game.AccountId,
+                GameTypeId = game.GameTypeId,
+                GameRules = game.GameRules
             };
             dataBase.Add(_game);
             dataBase.SaveChanges();
@@ -42,6 +47,8 @@ namespace RunningManApi.Repository
             {
                 _game.Name = game.Name;
                 _game.Level = game.Level;
+                _game.GameRules = game.GameRules;
+                _game.GameTypeId = game.GameTypeId;
                 dataBase.SaveChanges();
             }
         }

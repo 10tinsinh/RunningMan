@@ -13,6 +13,9 @@ namespace RunningManApi.DTO.Models
         public int? Level { get; set; }
       
         public int? AccountId { get; set; }
+        public int GameTypeId { get; set; }
+        
+        public string GameRules { get; set; }
     }
     public class GameIdDTO:GameDTO
     {
