@@ -5,13 +5,14 @@ using System.Threading.Tasks;
 
 namespace RunningManApi.DTO.Models
 {
-    public class DetailRoleDTO
+    public class RoleDTO
     {
-       
-        public int AccountId { get; set; }
-        public int RolesId { get; set; }
+        public string RoleCode { get; set; }
+      
+        public string RoleName { get; set; }
     }
-    public class DetailRoleIdDTO:DetailRoleDTO
+
+    public class RoleIdDTO:RoleDTO
     {
         public int Id { get; set; }
     }

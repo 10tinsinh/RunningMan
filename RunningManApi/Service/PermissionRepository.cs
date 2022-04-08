@@ -17,21 +17,21 @@ namespace RunningManApi.Service
     {
         
         
-        private Repository.PermissionDataAccess permission;
-        private Repository.DetailPermissionDataAccess detailPermission;
+        private Repository.PermissionDataAccess permissionData;
+        private Repository.DetailPermissionDataAccess detailPermissionData;
         private readonly AppSetting _appSetting;
 
         public PermissionRepository(IOptionsMonitor<AppSetting> optionsMonitor)
         {
 
-            permission = new PermissionDataAccess();
-            detailPermission = new DetailPermissionDataAccess();
+            permissionData = new PermissionDataAccess();
+            detailPermissionData = new DetailPermissionDataAccess();
             _appSetting = optionsMonitor.CurrentValue;
         }
         public ApiResponse GetPermissionUser(int id, string permissionPolicy)
         {
-            var checkDetailPermission = detailPermission.GetDetailPermission().Where(x => x.AccountId == id);
-            var permissionUser = permission.GetPermission().SingleOrDefault(x => x.PermissionCode == permissionPolicy);
+            var checkDetailPermission = detailPermissionData.GetDetailPermission().Where(x => x.AccountId == id);
+            var permissionUser = permissionData.GetPermission().SingleOrDefault(x => x.PermissionCode == permissionPolicy);
             var result = checkDetailPermission.SingleOrDefault(x => x.PermissionId == permissionUser.Id);
             if (result != null)
             {
@@ -53,6 +53,66 @@ namespace RunningManApi.Service
                 };
                 return reponse;
             }
+        }
+
+        public List<PermissionIdDTO> GetPermission(string permissionName)
+        {
+            var checkPermission = permissionData.GetPermission().AsQueryable();
+            if(!string.IsNullOrEmpty(permissionName))
+            {
+                checkPermission = checkPermission.Where(x => x.PermissionName.Contains(permissionName));
+            }
+            var result = checkPermission.Select(x => new PermissionIdDTO
+            {
+                Id = x.Id,
+                PermissionCode = x.PermissionCode,
+                PermissionName = x.PermissionName
+            });
+            return result.ToList();
+            
+        }
+
+        public PermissionIdDTO CreatePermission(PermissionDTO permissionDTO)
+        {
+            var checkPermission = permissionData.GetPermission().SingleOrDefault(x => x.PermissionCode == permissionDTO.PermissionCode);
+            if(checkPermission != null)
+            {
+                throw new Exception();
+            }
+            var permission = new PermissionDTO
+            {
+                PermissionCode = permissionDTO.PermissionCode,
+                PermissionName = permissionDTO.PermissionName
+            };
+            permissionData.CreatePermission(permission);
+            var newPermission = permissionData.GetPermission().SingleOrDefault(x => x.PermissionCode == permissionDTO.PermissionCode);
+            var result = new PermissionIdDTO
+            {
+                Id = newPermission.Id,
+                PermissionCode = newPermission.PermissionCode,
+                PermissionName = newPermission.PermissionName
+            };
+            return result;
+        }
+
+        public void UpdatePermission(int id, PermissionDTO permissionDTO)
+        {
+            var checkPermission = permissionData.GetPermission().SingleOrDefault(x => x.Id == id);
+            if(checkPermission == null)
+            {
+                throw new Exception();
+            }
+            permissionData.UpdatePermission(id, permissionDTO);
+        }
+
+        public void DeletePermission(string permissionCode)
+        {
+            var checkPermission = permissionData.GetPermission().SingleOrDefault(x => x.PermissionCode == permissionCode);
+            if(checkPermission == null)
+            {
+                throw new Exception();
+            }
+            permissionData.DeletePermission(checkPermission.Id);
         }
     }
 }

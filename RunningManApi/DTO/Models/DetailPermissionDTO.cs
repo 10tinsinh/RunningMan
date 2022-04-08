@@ -7,17 +7,14 @@ namespace RunningManApi.DTO.Models
 {
     public class DetailPermissionDTO
     {
-        public int id { get; set; }
+        
         public int AccountId { get; set; }
         public int PermissionId { get; set; }
     }
-    public class PermissionUserDTO
-    {
-        public string Permission { get; set; }
-    }
-    public class PermissionDTO
+
+    public class DeTailPermissionIdDTO:DetailPermissionDTO
     {
         public int id { get; set; }
-        public int PermissionCode { get; set; }
     }
+   
 }
