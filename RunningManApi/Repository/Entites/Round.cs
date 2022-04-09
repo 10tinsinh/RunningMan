@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace RunningManApi.Repository.Entites
 {
     [Table("Round")]
-    [Index(nameof(Id), Name = "UQ__Round__3214EC06D491DAC5", IsUnique = true)]
+    [Index(nameof(Id), Name = "UQ__Round__3214EC061D3AAABB", IsUnique = true)]
     public partial class Round
     {
         public Round()
@@ -31,8 +31,8 @@ namespace RunningManApi.Repository.Entites
         [InverseProperty("Rounds")]
         public virtual Account Account { get; set; }
         [ForeignKey(nameof(LocationId))]
-        [InverseProperty(nameof(Localtion.Rounds))]
-        public virtual Localtion Location { get; set; }
+        [InverseProperty("Rounds")]
+        public virtual Location Location { get; set; }
         [InverseProperty(nameof(RoundDetail.Round))]
         public virtual ICollection<RoundDetail> RoundDetails { get; set; }
     }

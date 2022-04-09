@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace RunningManApi.Repository.Entites
 {
-    [Table("Localtion")]
-    [Index(nameof(Id), Name = "UQ__Localtio__3214EC06F6460874", IsUnique = true)]
-    public partial class Localtion
+    [Table("Location")]
+    [Index(nameof(Id), Name = "UQ__Location__3214EC066E9BAD21", IsUnique = true)]
+    public partial class Location
     {
-        public Localtion()
+        public Location()
         {
             Rounds = new HashSet<Round>();
         }
@@ -21,7 +21,7 @@ namespace RunningManApi.Repository.Entites
         public int Id { get; set; }
         [Required]
         [StringLength(250)]
-        public string Adress { get; set; }
+        public string Address { get; set; }
 
         [InverseProperty(nameof(Round.Location))]
         public virtual ICollection<Round> Rounds { get; set; }

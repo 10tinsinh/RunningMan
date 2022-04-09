@@ -22,7 +22,7 @@ namespace RunningManApi.Repository
         public virtual DbSet<Game> Games { get; set; }
         public virtual DbSet<GamePlay> GamePlays { get; set; }
         public virtual DbSet<GameType> GameTypes { get; set; }
-        public virtual DbSet<Localtion> Localtions { get; set; }
+        public virtual DbSet<Location> Locations { get; set; }
         public virtual DbSet<Permission> Permissions { get; set; }
         public virtual DbSet<PermissionDetail> PermissionDetails { get; set; }
         public virtual DbSet<Point> Points { get; set; }
