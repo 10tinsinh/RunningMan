@@ -39,6 +39,7 @@ namespace RunningManApi
         {
 
             services.AddControllers().AddNewtonsoftJson();
+            services.AddScoped<ILocationRepository, LocationRepository>();
             services.AddScoped<ITeamRepository, TeamRepository>();
             services.AddScoped<IGameTypeRepository, GameTypeRepository>();
             services.AddScoped<IAccountRepository, AccountRepository>();

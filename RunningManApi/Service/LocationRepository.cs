@@ -65,7 +65,17 @@ namespace RunningManApi.Service
 
         public void UpdateLocation(int id, LocationDTO locationDTO)
         {
-            throw new NotImplementedException();
+            var checkLocation = locationData.GetLocations().SingleOrDefault(x => x.Id == id);
+            if(checkLocation == null)
+            {
+                throw new Exception();
+            }
+            var location = new LocationDTO
+            {
+                Adress = locationDTO.Adress
+            };
+            locationData.UpdateLocation(id, location);
+
         }
     }
 }
