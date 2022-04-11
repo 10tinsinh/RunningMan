@@ -46,7 +46,7 @@ namespace RunningManApi.Repository
             if(checkRound != null)
             {
                 checkRound.Name = roundDTO.Name;
-                checkRound.AccountId = roundDTO.AccountId;
+                
                 checkRound.LocationId = roundDTO.LocationId;
                 dataBase.SaveChanges();
             }

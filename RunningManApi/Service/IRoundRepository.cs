@@ -9,7 +9,7 @@ namespace RunningManApi.Service
     public interface IRoundRepository
     {
         List<RoundIdDTO> GetRound(string name);
-        RoundIdDTO CreateRound(RoundDTO roundDTO);
+        RoundIdDTO CreateRound(int id,RoundDTO roundDTO);
         void UpdateRound(int id, RoundDTO roundDTO);
         void DeleteRound(string name);
     }

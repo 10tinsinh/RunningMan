@@ -42,7 +42,9 @@ namespace RunningManApi.Controllers
         {
             try
             {
-                var result = _roundRepository.CreateRound(roundDTO);
+                var identity = User.Claims.FirstOrDefault(x => x.Type.Equals("Id"));
+                var idUser = identity.Value;
+                var result = _roundRepository.CreateRound(int.Parse(idUser),roundDTO);
                 return Ok(result);
             }
             catch

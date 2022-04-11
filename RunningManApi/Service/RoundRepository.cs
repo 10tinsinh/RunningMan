@@ -16,7 +16,7 @@ namespace RunningManApi.Service
             roundData = new RoundDataAccess();
         }
 
-        public RoundIdDTO CreateRound(RoundDTO roundDTO)
+        public RoundIdDTO CreateRound(int id,RoundDTO roundDTO)
         {
             var checkRound = roundData.GetRound().SingleOrDefault(x => x.Name == roundDTO.Name);
             if(checkRound != null)
@@ -27,7 +27,7 @@ namespace RunningManApi.Service
             {
                 Name = roundDTO.Name,
                 LocationId = roundDTO.LocationId,
-                AccountId = roundDTO.AccountId
+                AccountId = id
             };
             roundData.CreateRound(round);
             var newRound = roundData.GetRound().SingleOrDefault(x => x.Name == roundDTO.Name);
@@ -78,8 +78,7 @@ namespace RunningManApi.Service
             var round = new RoundDTO
             {
                 Name = roundDTO.Name,
-                LocationId = roundDTO.LocationId,
-                AccountId = roundDTO.AccountId
+                LocationId = roundDTO.LocationId
             };
             roundData.UpdateRound(id, round);
         }
