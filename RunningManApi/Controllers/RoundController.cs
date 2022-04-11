@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RunningManApi.DTO.Models;
 using RunningManApi.Service;
@@ -20,6 +21,7 @@ namespace RunningManApi.Controllers
             _roundRepository = roundRepository;
         }
 
+        [Authorize(Policy = PolicyCode.ADMIN)]
         [HttpGet("GetRound")]
         public IActionResult GetRound(string name)
         {
@@ -34,6 +36,7 @@ namespace RunningManApi.Controllers
             }
         }
 
+        [Authorize(Policy = PolicyCode.ADMIN)]
         [HttpPost("CreateRound")]
         public IActionResult CreateRound(RoundDTO roundDTO)
         {
@@ -48,6 +51,7 @@ namespace RunningManApi.Controllers
             }
         }
 
+        [Authorize(Policy = PolicyCode.ADMIN)]
         [HttpPut("UpdateRound")]
         public IActionResult UpdateRound(int id, RoundDTO roundDTO)
         {
@@ -70,16 +74,17 @@ namespace RunningManApi.Controllers
             }
         }
 
+        [Authorize(Policy = PolicyCode.ADMIN)]
         [HttpDelete("DeleteRound")]
         public IActionResult DeleteRound(string name)
         {
             try
             {
-                _roundRepository.DeleteRound(id, roundDTO);
+                _roundRepository.DeleteRound(name);
                 return Ok(new ApiResponse
                 {
                     Success = true,
-                    Message = "Update Round Successfully"
+                    Message = "Delete Round Successfully"
                 });
             }
             catch

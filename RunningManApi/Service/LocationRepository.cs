@@ -10,10 +10,12 @@ namespace RunningManApi.Service
     public class LocationRepository:ILocationRepository
     {
         private readonly LocationDataAccess locationData;
+        private readonly RoundDataAccess roundData;
 
         public LocationRepository()
         {
             locationData = new LocationDataAccess();
+            roundData = new RoundDataAccess();
         }
 
         public LocationIdDTO CreateLocation(LocationDTO locationDTO)
@@ -44,6 +46,15 @@ namespace RunningManApi.Service
             {
                 throw new Exception();
             }
+            var checkRound = roundData.GetRound().Where(x => x.LocationId == checkLocation.Id);
+            if(checkRound.Any())
+            {
+                foreach (int id in checkRound.Select(x => x.Id))
+                {
+                    roundData.DeleteRound(id);
+                }
+            }    
+               
             locationData.DeleteLocation(checkLocation.Id);
         }
 
