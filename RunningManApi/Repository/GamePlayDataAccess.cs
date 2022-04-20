@@ -11,9 +11,9 @@ namespace RunningManApi.Repository
     {
         private readonly MyDbContext dataBase;
 
-        public GamePlayDataAccess(MyDbContext myDbContext)
+        public GamePlayDataAccess()
         {
-            dataBase = myDbContext;
+            dataBase = new MyDbContext();
         }
 
         public List<GamePlay> GetGamePlay()
