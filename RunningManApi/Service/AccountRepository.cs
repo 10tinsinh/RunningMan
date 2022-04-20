@@ -21,6 +21,7 @@ namespace RunningManApi.Service
         private Repository.DetailRoleDataAccess detailRole;
         private readonly PermissionDataAccess permission;
         private readonly DetailPermissionDataAccess detailPermission;
+        private readonly PointDataAccess pointData;
         private readonly AppSetting _appSetting;
 
         public AccountRepository( IOptionsMonitor<AppSetting> optionsMonitor)
@@ -31,6 +32,7 @@ namespace RunningManApi.Service
             detailRole = new DetailRoleDataAccess();
             permission = new PermissionDataAccess();
             detailPermission = new DetailPermissionDataAccess();
+            pointData = new PointDataAccess();
             _appSetting = optionsMonitor.CurrentValue;
         }
 
@@ -76,9 +78,19 @@ namespace RunningManApi.Service
                     PermissionId = temp
                 };
                 detailPermission.CreatePermissionDetail(addPermissionDetail);
+            }
+
+            /// Create Manager Point User
+            var checkPoint = pointData.GetPoint().SingleOrDefault(x => x.AccountId == newUser.Id);
+            if(checkPoint == null)
+            {
+                var point = new PointDTO
+                {
+                    AccountId = newUser.Id
+                    
+                };
+                pointData.CreatePoint(point);
             }    
-
-
 
             return new AccountIdDTO
             {
@@ -252,12 +264,17 @@ namespace RunningManApi.Service
                         detailRole.DeleteRole(temp);
                     }
                 }
+
+                var pointCheck = pointData.GetPoint().SingleOrDefault(x => x.AccountId == id);
+                if(pointCheck !=null)
+                {
+                    pointData.DeletePoint(pointCheck.Id);
+                }    
                
                 account.DeleteAccount(id);
-                
-                 
-                
+ 
             }
+
         }
 
         public AccountIdDTO GetInformationAccountLogin(int id)
