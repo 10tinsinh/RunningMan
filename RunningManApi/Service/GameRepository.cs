@@ -86,7 +86,8 @@ namespace RunningManApi.Service
                 Name = gameDTO.Name,
                 AccountId = gameDTO.AccountId,
                 GameTypeId = gameDTO.GameTypeId,
-                GameRules = gameDTO.GameRules
+                GameRules = gameDTO.GameRules,
+                Level = gameDTO.Level
             };
             gameData.UpdateGame(id, game);
         }

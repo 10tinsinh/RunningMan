@@ -45,10 +45,25 @@ namespace RunningManApi.Repository
             var _game = dataBase.Games.SingleOrDefault(x => x.Id == id);
             if(_game != null)
             {
-                _game.Name = game.Name;
-                _game.Level = game.Level;
-                _game.GameRules = game.GameRules;
-                _game.GameTypeId = game.GameTypeId;
+                if(game.Name != null)
+                {
+                    _game.Name = game.Name;
+                }
+                if (game.Level != null)
+                {
+                    _game.Level = game.Level;
+                }
+                if (game.GameRules != null)
+                {
+                    _game.GameRules = game.GameRules;
+                }
+                if (game.GameTypeId != 0)
+                {
+                    _game.GameTypeId = game.GameTypeId;
+                }
+
+                
+                
                 dataBase.SaveChanges();
             }
         }

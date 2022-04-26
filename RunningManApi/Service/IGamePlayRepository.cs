@@ -9,7 +9,7 @@ namespace RunningManApi.Service
     public interface IGamePlayRepository
     {
         List<GamePlayIdDTO> GetGamePlay(string account);
-        GamePlayIdDTO CreateGamePlay(int id,GamePlayDTO gamePlayDTO);
+        GamePlayIdDTO CreateGamePlay(int teamId,int id);
         void UpdateGamePlay(int id, GamePlayDTO gamePlayDTO);
 
         void DeleteGamePlay(int id);
