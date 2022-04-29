@@ -32,6 +32,7 @@ namespace RunningManApi.Repository
         public virtual DbSet<RoundDetail> RoundDetails { get; set; }
         public virtual DbSet<Team> Teams { get; set; }
         public virtual DbSet<TeamDetail> TeamDetails { get; set; }
+        public virtual DbSet<UserRefreshToken> UserRefreshTokens { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -187,6 +188,15 @@ namespace RunningManApi.Repository
                     .HasForeignKey(d => d.TeamId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_TeamDetail_Team");
+            });
+
+            modelBuilder.Entity<UserRefreshToken>(entity =>
+            {
+                entity.Property(e => e.IsActive).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.RefreshToken).IsUnicode(false);
+
+                entity.Property(e => e.UserName).IsUnicode(false);
             });
 
             OnModelCreatingPartial(modelBuilder);

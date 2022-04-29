@@ -22,9 +22,11 @@ namespace RunningManApi.Service
         private readonly PermissionDataAccess permission;
         private readonly DetailPermissionDataAccess detailPermission;
         private readonly PointDataAccess pointData;
+        private readonly UserRefreshTokenDataAccess refreshTokenData;
         private readonly AppSetting _appSetting;
+        private readonly IJWTManagerTokenRepository _jwtManager;
 
-        public AccountRepository( IOptionsMonitor<AppSetting> optionsMonitor)
+        public AccountRepository( IOptionsMonitor<AppSetting> optionsMonitor, IJWTManagerTokenRepository jWTManagerTokenRepository)
         {
             account = new UserDataAccess();
             
@@ -33,7 +35,9 @@ namespace RunningManApi.Service
             permission = new PermissionDataAccess();
             detailPermission = new DetailPermissionDataAccess();
             pointData = new PointDataAccess();
+            refreshTokenData = new UserRefreshTokenDataAccess();
             _appSetting = optionsMonitor.CurrentValue;
+            _jwtManager = jWTManagerTokenRepository;
         }
 
         public AccountIdDTO CreateAccount(AccountDTO user)
@@ -145,12 +149,20 @@ namespace RunningManApi.Service
                 {
                     if(checkUser.AccountStatus == true)
                     {
+                        var token = _jwtManager.GenerateToken(checkUser);
                         var result = new ApiResponse
                         {
                             Success = true,
                             Message = "Loggin successfully",
-                            Data = GenerateToken(checkUser)
+                            Data = token
                         };
+                        var refreshToken = new UserRefreshTokenDTO
+                        {
+                            RefreshToken = token.RefreshToken,
+                            UserName = checkUser.UserName
+                        };
+                        var refresh = refreshTokenData.CreateUserRefreshToken(refreshToken);
+
                         return result;
                     }
                     else
@@ -188,29 +200,7 @@ namespace RunningManApi.Service
             var roleData = role.GetRole().SingleOrDefault(x => x.Id == detailRoleLogin.RolesId);
             return roleData.RoleCode;
         }
-       
-        private string GenerateToken(Account account)
-        {
-            var jwtToken = new JwtSecurityTokenHandler();
-            var secretKeyBytes = Encoding.UTF8.GetBytes(_appSetting.SecretKey);
-            var jwtTokenDescription = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new[]
-                {
-                    new Claim (ClaimTypes.Name, account.Name),
-                    new Claim (ClaimTypes.Email, account.Email),
-                    new Claim ("Username", account.UserName),
-                    new Claim ("Id", account.Id.ToString()),
-                    new Claim ("AccountStatus", account.AccountStatus.ToString()),
 
-                }),
-                Expires = DateTime.UtcNow.AddMinutes(30),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytes), SecurityAlgorithms.HmacSha512Signature)
-
-            };
-            var token = jwtToken.CreateToken(jwtTokenDescription);
-            return jwtToken.WriteToken(token);
-        }
 
         public void Update(int id, AccountDTO _account)
         {
@@ -290,6 +280,33 @@ namespace RunningManApi.Service
                 AccountStatus = checkUser.AccountStatus
             };
             return User;
+        }
+
+        public ApiResponse RenewToken(TokensDTO tokensDTO)
+        {
+            var princaipal = _jwtManager.GetPrincaipalFromExpiredToken(tokensDTO.AccessToken);
+            var user = account.GetAccount().SingleOrDefault(x => x.UserName == princaipal.Identity.Name);
+            var checkRefreshToken = refreshTokenData.GetUserRefreshTokens().SingleOrDefault(x=>x.RefreshToken == tokensDTO.RefreshToken);
+            if(checkRefreshToken == null)
+            {
+                throw new Exception();
+            }
+            var newJwtToken = _jwtManager.GenerateRefreshToken(user);
+            refreshTokenData.DeleteUserRefreshToken(checkRefreshToken.Id);
+            var newRefreshToken = new UserRefreshTokenDTO
+            {
+                RefreshToken = newJwtToken.RefreshToken,
+                UserName = user.UserName
+            };
+            refreshTokenData.CreateUserRefreshToken(newRefreshToken);
+            return new ApiResponse
+            {
+                Success = true,
+                Message = "Loggin successfully",
+                Data = newJwtToken
+            };
+
+
         }
     }
 }

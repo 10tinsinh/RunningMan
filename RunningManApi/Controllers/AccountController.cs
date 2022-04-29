@@ -98,6 +98,24 @@ namespace RunningManApi.Controllers
             }
         }
 
+        [HttpPost("RefreshToken")]
+        public IActionResult RefreshToken(TokensDTO tokens)
+        {
+            try
+            {
+                return Ok(_accountRepository.RenewToken(tokens));
+            }
+            catch
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid request"
+
+                });
+            }
+        }
+
         [Authorize(Policy = PolicyCode.DELETE_USER)]
         [HttpDelete]
         public IActionResult DeleteAccount(int id)

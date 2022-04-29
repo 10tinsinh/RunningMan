@@ -10,7 +10,7 @@ namespace RunningManApi.Repository.Entites
 {
     [Table("PermissionDetail")]
     [Index(nameof(AccountId), nameof(PermissionId), Name = "UC_PermissionDetail", IsUnique = true)]
-    [Index(nameof(Id), Name = "UQ__Permissi__3214EC0673E1DE65", IsUnique = true)]
+    [Index(nameof(Id), Name = "UQ__Permissi__3214EC0673255F3B", IsUnique = true)]
     public partial class PermissionDetail
     {
         [Key]

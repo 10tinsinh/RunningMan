@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore;
 namespace RunningManApi.Repository.Entites
 {
     [Table("Permission")]
-    [Index(nameof(PermissionCode), Name = "UQ__Permissi__0C93AC102FB2A33D", IsUnique = true)]
-    [Index(nameof(Id), Name = "UQ__Permissi__3214EC067C45F18A", IsUnique = true)]
+    [Index(nameof(PermissionCode), Name = "UQ__Permissi__0C93AC10FA4FB0AC", IsUnique = true)]
+    [Index(nameof(Id), Name = "UQ__Permissi__3214EC06026FDD2B", IsUnique = true)]
     public partial class Permission
     {
         public Permission()

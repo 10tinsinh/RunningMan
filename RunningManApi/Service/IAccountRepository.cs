@@ -14,6 +14,7 @@ namespace RunningManApi.Service
         AccountIdDTO CreateAccount(AccountDTO account);
 
         ApiResponse Login(Login login);
+        ApiResponse RenewToken(TokensDTO tokensDTO);
 
         void Update(int id, AccountDTO account);
 

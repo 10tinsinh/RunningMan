@@ -39,6 +39,7 @@ namespace RunningManApi
         {
 
             services.AddControllers().AddNewtonsoftJson();
+            services.AddSingleton<IJWTManagerTokenRepository, JWTManagerTokenRepository>();
             services.AddScoped<IRoundRepository, RoundRepository>();
             services.AddScoped<IGamePlayRepository, GamePlayRepository>();
             services.AddScoped<ILocationRepository, LocationRepository>();
@@ -70,6 +71,17 @@ namespace RunningManApi
 
                         ClockSkew = TimeSpan.Zero
 
+                    };
+                    opt.Events = new JwtBearerEvents
+                    {
+                        OnAuthenticationFailed = context =>
+                        {
+                            if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+                            {
+                                context.Response.Headers.Add("IS-TOKEN-EXPIRED", "true");
+                            }
+                            return Task.CompletedTask;
+                        }
                     };
                 });
             /*Authorization filter */

@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace RunningManApi.Repository.Entites
 {
-    [Index(nameof(RoleCode), Name = "UQ__Roles__1E835107CFEF7C00", IsUnique = true)]
-    [Index(nameof(Id), Name = "UQ__Roles__3214EC0659599B0B", IsUnique = true)]
+    [Index(nameof(RoleCode), Name = "UQ__Roles__1E835107E85DC586", IsUnique = true)]
+    [Index(nameof(Id), Name = "UQ__Roles__3214EC0630B47715", IsUnique = true)]
     public partial class Role
     {
         public Role()
