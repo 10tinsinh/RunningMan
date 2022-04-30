@@ -28,7 +28,11 @@ namespace RunningManApi.Service
                 Name = gameDTO.Name,
                 AccountId = id,
                 GameTypeId = gameDTO.GameTypeId,
-                GameRules = gameDTO.GameRules
+                GameRules = gameDTO.GameRules,
+                Question = gameDTO.Question,
+                Answer = gameDTO.Answer,
+                Hint1 = gameDTO.Hint1,
+                Hint2 = gameDTO.Hint2
             };
             gameData.CreateGame(result);
             var game = gameData.GetGames().SingleOrDefault(x => x.Name == gameDTO.Name);
@@ -39,7 +43,11 @@ namespace RunningManApi.Service
                 Level = game.Level,
                 AccountId = game.AccountId,
                 GameTypeId = game.GameTypeId,
-                GameRules = game.GameRules
+                GameRules = game.GameRules,
+                Question = game.Question,
+                Answer = game.Answer,
+                Hint1 = game.Hint1,
+                Hint2 = game.Hint2
             };
         }
 
@@ -67,7 +75,11 @@ namespace RunningManApi.Service
                 Level = x.Level,
                 AccountId = x.AccountId,
                 GameTypeId = x.GameTypeId,
-                GameRules = x.GameRules
+                GameRules = x.GameRules,
+                Question = x.Question,
+                Answer = x.Answer,
+                Hint1 = x.Hint1,
+                Hint2 = x.Hint2
 
             });
             return result.ToList();
@@ -87,7 +99,11 @@ namespace RunningManApi.Service
                 AccountId = gameDTO.AccountId,
                 GameTypeId = gameDTO.GameTypeId,
                 GameRules = gameDTO.GameRules,
-                Level = gameDTO.Level
+                Level = gameDTO.Level,
+                Question = gameDTO.Question,
+                Answer = gameDTO.Answer,
+                Hint1 = gameDTO.Hint1,
+                Hint2 = gameDTO.Hint2
             };
             gameData.UpdateGame(id, game);
         }

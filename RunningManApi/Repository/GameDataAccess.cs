@@ -19,7 +19,11 @@ namespace RunningManApi.Repository
                 Level =x.Level,
                 AccountId=x.AccountId,
                 GameTypeId = x.GameTypeId,
-                GameRules = x.GameRules
+                GameRules = x.GameRules,
+                Question = x.Question,
+                Answer = x.Answer,
+                Hint1 = x.Hint1,
+                Hint2 = x.Hint2
                 
             });
             return game.ToList();
@@ -33,7 +37,11 @@ namespace RunningManApi.Repository
                 Name = game.Name,
                 AccountId = game.AccountId,
                 GameTypeId = game.GameTypeId,
-                GameRules = game.GameRules
+                GameRules = game.GameRules,
+                Question =game.Question,
+                Answer = game.Answer,
+                Hint1=game.Hint1,
+                Hint2=game.Hint2
             };
             dataBase.Add(_game);
             dataBase.SaveChanges();
@@ -61,9 +69,25 @@ namespace RunningManApi.Repository
                 {
                     _game.GameTypeId = game.GameTypeId;
                 }
+                if (game.Question != null)
+                {
+                    _game.Question = game.Question;
+                }
+                if (game.Answer != null)
+                {
+                    _game.Answer = game.Answer;
+                }
+                if (game.Hint1 != null)
+                {
+                    _game.Hint1 = game.Hint1;
+                }
+                if (game.Hint2 != null)
+                {
+                    _game.Hint2 = game.Hint2;
+                }
 
-                
-                
+
+
                 dataBase.SaveChanges();
             }
         }

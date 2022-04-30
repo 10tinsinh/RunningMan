@@ -9,14 +9,13 @@ using Microsoft.EntityFrameworkCore;
 namespace RunningManApi.Repository.Entites
 {
     [Table("Team")]
-    [Index(nameof(Id), Name = "UQ__Team__3214EC06F10CD1F9", IsUnique = true)]
+    [Index(nameof(Id), Name = "UQ__Team__3214EC068BA4FF91", IsUnique = true)]
     public partial class Team
     {
         public Team()
         {
             GamePlays = new HashSet<GamePlay>();
             Points = new HashSet<Point>();
-            RoundDetails = new HashSet<RoundDetail>();
             TeamDetails = new HashSet<TeamDetail>();
         }
 
@@ -30,8 +29,6 @@ namespace RunningManApi.Repository.Entites
         public virtual ICollection<GamePlay> GamePlays { get; set; }
         [InverseProperty(nameof(Point.Team))]
         public virtual ICollection<Point> Points { get; set; }
-        [InverseProperty(nameof(RoundDetail.Team))]
-        public virtual ICollection<RoundDetail> RoundDetails { get; set; }
         [InverseProperty(nameof(TeamDetail.Team))]
         public virtual ICollection<TeamDetail> TeamDetails { get; set; }
     }

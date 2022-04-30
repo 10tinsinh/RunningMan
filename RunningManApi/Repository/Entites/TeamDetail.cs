@@ -9,7 +9,8 @@ using Microsoft.EntityFrameworkCore;
 namespace RunningManApi.Repository.Entites
 {
     [Table("TeamDetail")]
-    [Index(nameof(Id), Name = "UQ__TeamDeta__3214EC0672311945", IsUnique = true)]
+    [Index(nameof(TeamId), nameof(AccountId), Name = "UC_TeamDetail", IsUnique = true)]
+    [Index(nameof(Id), Name = "UQ__TeamDeta__3214EC06D1C6DE6D", IsUnique = true)]
     public partial class TeamDetail
     {
         [Key]

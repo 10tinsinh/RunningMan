@@ -284,8 +284,15 @@ namespace RunningManApi.Service
 
         public ApiResponse RenewToken(TokensDTO tokensDTO)
         {
+            //var identity = User.Claims.FirstOrDefault(x => x.Type.Equals("Id"));
             var princaipal = _jwtManager.GetPrincaipalFromExpiredToken(tokensDTO.AccessToken);
-            var user = account.GetAccount().SingleOrDefault(x => x.UserName == princaipal.Identity.Name);
+            var checkRefresh = refreshTokenData.GetUserRefreshTokens().SingleOrDefault(x => x.RefreshToken == tokensDTO.RefreshToken);
+            if (checkRefresh == null)
+            {
+                throw new Exception();
+            }
+            var user = account.GetAccount().SingleOrDefault(x => x.UserName == checkRefresh.UserName);
+            
             var checkRefreshToken = refreshTokenData.GetUserRefreshTokens().SingleOrDefault(x=>x.RefreshToken == tokensDTO.RefreshToken);
             if(checkRefreshToken == null)
             {

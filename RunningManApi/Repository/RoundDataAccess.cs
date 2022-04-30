@@ -17,7 +17,10 @@ namespace RunningManApi.Repository
                 Id = x.Id,
                 Name = x.Name,
                 LocationId = x.LocationId,
-                AccountId = x.AccountId
+                AccountId = x.AccountId,
+                BonusPoints = x.BonusPoints,
+                Level = x.Level
+                
             });
             return round.ToList();
         }
@@ -32,7 +35,10 @@ namespace RunningManApi.Repository
                 {
                     Name = roundDTO.Name,
                     LocationId = roundDTO.LocationId,
-                    AccountId = roundDTO.AccountId
+                    AccountId = roundDTO.AccountId,
+                    BonusPoints = roundDTO.BonusPoints,
+                    Level = roundDTO.Level
+
                 };
                 dataBase.Add(round);
                 dataBase.SaveChanges();
@@ -45,9 +51,19 @@ namespace RunningManApi.Repository
             var checkRound = dataBase.Rounds.SingleOrDefault(x => x.Id == id);
             if(checkRound != null)
             {
-                checkRound.Name = roundDTO.Name;
-                
-                checkRound.LocationId = roundDTO.LocationId;
+                if(roundDTO.Name != null)
+                {
+                    checkRound.Name = roundDTO.Name;
+                }
+                if (roundDTO.LocationId != 0)
+                {
+                    checkRound.LocationId = roundDTO.LocationId;
+                }
+                if (roundDTO.BonusPoints != 0)
+                {
+                    checkRound.BonusPoints = roundDTO.BonusPoints;
+                }
+
                 dataBase.SaveChanges();
             }
         }

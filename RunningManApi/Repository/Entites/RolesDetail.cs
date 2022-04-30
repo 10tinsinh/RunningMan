@@ -10,7 +10,7 @@ namespace RunningManApi.Repository.Entites
 {
     [Table("RolesDetail")]
     [Index(nameof(AccountId), nameof(RolesId), Name = "UC_RolesDetail", IsUnique = true)]
-    [Index(nameof(Id), Name = "UQ__RolesDet__3214EC0617475F9F", IsUnique = true)]
+    [Index(nameof(Id), Name = "UQ__RolesDet__3214EC0625B2BB25", IsUnique = true)]
     public partial class RolesDetail
     {
         [Key]

@@ -12,8 +12,6 @@ namespace RunningManApi.DTO.Models
         public int? RoundId { get; set; }
         
         public int? GameId { get; set; }
-       
-        public int? TeamId { get; set; }
     }
 
 

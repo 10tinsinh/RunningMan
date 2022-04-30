@@ -16,8 +16,8 @@ namespace RunningManApi.Repository
             {
                 Id = x.Id,
                 RoundId = x.RoundId,
-                GameId = x.GameId,
-                TeamId = x.TeamId
+                GameId = x.GameId
+                
             });
             return roundDetail.ToList();
         }
@@ -25,14 +25,14 @@ namespace RunningManApi.Repository
         public void CreateRoundDetail(DetailRoundDTO detailRoundDTO)
         {
             var dataBase = new MyDbContext();
-            var checkRoundDetail = dataBase.RoundDetails.SingleOrDefault(x => x.TeamId == detailRoundDTO.TeamId && x.GameId == detailRoundDTO.GameId);
+            var checkRoundDetail = dataBase.RoundDetails.SingleOrDefault(x=>x.RoundId == detailRoundDTO.RoundId && x.GameId == detailRoundDTO.GameId);
             if(checkRoundDetail == null)
             {
                 var result = new RoundDetail
                 {
                     RoundId = detailRoundDTO.RoundId,
-                    GameId = detailRoundDTO.GameId,
-                    TeamId = detailRoundDTO.TeamId
+                    GameId = detailRoundDTO.GameId
+                    
                 };
                 dataBase.Add(result);
                 dataBase.SaveChanges();
@@ -45,9 +45,8 @@ namespace RunningManApi.Repository
             var checkRoundDetail = dataBase.RoundDetails.SingleOrDefault(x => x.Id == id);
             if(checkRoundDetail != null)
             {
-                checkRoundDetail.TeamId = detailRoundDTO.TeamId;
+                
                 checkRoundDetail.GameId = detailRoundDTO.GameId;
-                checkRoundDetail.RoundId = detailRoundDTO.RoundId;
                 dataBase.SaveChanges();
             }
         }

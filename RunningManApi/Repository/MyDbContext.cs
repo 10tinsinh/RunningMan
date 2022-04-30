@@ -20,6 +20,7 @@ namespace RunningManApi.Repository
 
         public virtual DbSet<Account> Accounts { get; set; }
         public virtual DbSet<Game> Games { get; set; }
+        public virtual DbSet<GameHistory> GameHistories { get; set; }
         public virtual DbSet<GamePlay> GamePlays { get; set; }
         public virtual DbSet<GameType> GameTypes { get; set; }
         public virtual DbSet<Location> Locations { get; set; }
@@ -30,6 +31,7 @@ namespace RunningManApi.Repository
         public virtual DbSet<RolesDetail> RolesDetails { get; set; }
         public virtual DbSet<Round> Rounds { get; set; }
         public virtual DbSet<RoundDetail> RoundDetails { get; set; }
+        public virtual DbSet<RoundHistory> RoundHistories { get; set; }
         public virtual DbSet<Team> Teams { get; set; }
         public virtual DbSet<TeamDetail> TeamDetails { get; set; }
         public virtual DbSet<UserRefreshToken> UserRefreshTokens { get; set; }
@@ -70,14 +72,29 @@ namespace RunningManApi.Repository
                     .HasConstraintName("fk_Game_GameType");
             });
 
+            modelBuilder.Entity<GameHistory>(entity =>
+            {
+                entity.HasOne(d => d.Account)
+                    .WithMany(p => p.GameHistories)
+                    .HasForeignKey(d => d.AccountId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_GameHistory_Account");
+
+                entity.HasOne(d => d.Game)
+                    .WithMany(p => p.GameHistories)
+                    .HasForeignKey(d => d.GameId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_GameHistory_Game");
+            });
+
             modelBuilder.Entity<GamePlay>(entity =>
             {
                 entity.Property(e => e.Rank).HasDefaultValueSql("((1))");
 
-                entity.HasOne(d => d.Game)
+                entity.HasOne(d => d.Round)
                     .WithMany(p => p.GamePlays)
-                    .HasForeignKey(d => d.GameId)
-                    .HasConstraintName("fk_GamePlay_Game");
+                    .HasForeignKey(d => d.RoundId)
+                    .HasConstraintName("fk_GamePlay_Round");
 
                 entity.HasOne(d => d.Team)
                     .WithMany(p => p.GamePlays)
@@ -137,6 +154,8 @@ namespace RunningManApi.Repository
 
             modelBuilder.Entity<Round>(entity =>
             {
+                entity.Property(e => e.Level).HasDefaultValueSql("((1))");
+
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.Rounds)
                     .HasForeignKey(d => d.AccountId)
@@ -161,11 +180,15 @@ namespace RunningManApi.Repository
                     .WithMany(p => p.RoundDetails)
                     .HasForeignKey(d => d.RoundId)
                     .HasConstraintName("fk_RoundDetail_Round");
+            });
 
-                entity.HasOne(d => d.Team)
-                    .WithMany(p => p.RoundDetails)
-                    .HasForeignKey(d => d.TeamId)
-                    .HasConstraintName("fk_RoundDetail_Team");
+            modelBuilder.Entity<RoundHistory>(entity =>
+            {
+                entity.HasOne(d => d.Account)
+                    .WithMany(p => p.RoundHistories)
+                    .HasForeignKey(d => d.AccountId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_RoundHistory_Account");
             });
 
             modelBuilder.Entity<Team>(entity =>

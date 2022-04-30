@@ -23,9 +23,8 @@ namespace RunningManApi.Repository
             {
                 Id = x.Id,
                 Rank= x.Rank,
-                BonusPoints =x.BonusPoints,
                 Date = x.Date,
-                GameId = x.GameId,
+                RoundId = x.RoundId,
                 TeamId = x.TeamId
             });
 
@@ -37,9 +36,8 @@ namespace RunningManApi.Repository
             var gamePlay = new GamePlay
             {
                 Rank = gamePlayDTO.Rank,
-                BonusPoints = gamePlayDTO.BonusPoints,
                 Date = gamePlayDTO.Date,
-                GameId = gamePlayDTO.GameId,
+                RoundId = gamePlayDTO.RoundId,
                 TeamId = gamePlayDTO.TeamId
             };
             dataBase.Add(gamePlay);
@@ -55,18 +53,15 @@ namespace RunningManApi.Repository
                 {
                     checkGamePlay.Rank = gamePlayDTO.Rank;
                 }
-                if (gamePlayDTO.BonusPoints != null)
-                {
-                    checkGamePlay.BonusPoints = gamePlayDTO.BonusPoints;
-                }
-                if (gamePlayDTO.GameId != null)
-                {
-                    checkGamePlay.GameId = gamePlayDTO.GameId;
-                }
                 if (gamePlayDTO.TeamId != null)
                 {
                     checkGamePlay.TeamId = gamePlayDTO.TeamId;
                 }
+                if (gamePlayDTO.RoundId != null)
+                {
+                    checkGamePlay.RoundId = gamePlayDTO.RoundId;
+                }
+                
                 dataBase.SaveChanges();
             }    
         }

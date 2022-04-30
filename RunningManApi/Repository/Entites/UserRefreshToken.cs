@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace RunningManApi.Repository.Entites
 {
-    [Index(nameof(Id), Name = "UQ__UserRefr__3214EC0610C36B8F", IsUnique = true)]
-    [Index(nameof(UserName), Name = "UQ__UserRefr__C9F284566EE9AC8D", IsUnique = true)]
+    [Index(nameof(Id), Name = "UQ__UserRefr__3214EC0623997AE0", IsUnique = true)]
+    [Index(nameof(RefreshToken), Name = "UQ__UserRefr__DEA298DA4F9097DB", IsUnique = true)]
     public partial class UserRefreshToken
     {
         [Key]
@@ -17,6 +17,7 @@ namespace RunningManApi.Repository.Entites
         [Required]
         [StringLength(50)]
         public string UserName { get; set; }
+        [Required]
         [StringLength(500)]
         public string RefreshToken { get; set; }
         public bool? IsActive { get; set; }

@@ -27,7 +27,10 @@ namespace RunningManApi.Service
             {
                 Name = roundDTO.Name,
                 LocationId = roundDTO.LocationId,
-                AccountId = id
+                AccountId = id,
+                BonusPoints = roundDTO.BonusPoints,
+                Level = roundDTO.Level
+               
             };
             roundData.CreateRound(round);
             var newRound = roundData.GetRound().SingleOrDefault(x => x.Name == roundDTO.Name);
@@ -36,7 +39,9 @@ namespace RunningManApi.Service
                 Id = newRound.Id,
                 Name = newRound.Name,
                 LocationId = newRound.LocationId,
-                AccountId = newRound.AccountId
+                AccountId = newRound.AccountId,
+                BonusPoints = newRound.BonusPoints,
+                Level = newRound.Level
             };
             return result;
         }
@@ -63,7 +68,9 @@ namespace RunningManApi.Service
                 Id = x.Id,
                 Name = x.Name,
                 LocationId = x.LocationId,
-                AccountId = x.AccountId
+                AccountId = x.AccountId,
+                BonusPoints = x.BonusPoints,
+                Level = x.Level
             });
             return result.ToList();
         }
@@ -78,7 +85,9 @@ namespace RunningManApi.Service
             var round = new RoundDTO
             {
                 Name = roundDTO.Name,
-                LocationId = roundDTO.LocationId
+                LocationId = roundDTO.LocationId,
+                BonusPoints = roundDTO.BonusPoints
+                
             };
             roundData.UpdateRound(id, round);
         }
