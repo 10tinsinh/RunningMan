@@ -10,7 +10,7 @@ namespace RunningManApi.Service
     {
         List<DetailRoundDTO> GetRoundDetail(string roundName);
 
-        void CreateRoundDetail(int levelRound);
+        void CreateRoundDetail(int idRound);
 
         void DeleteRoundDetail(int id);
 

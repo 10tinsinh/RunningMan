@@ -39,6 +39,7 @@ namespace RunningManApi
         {
 
             services.AddControllers().AddNewtonsoftJson();
+            services.AddScoped<IRoundDetailRepository, RoundDetailRepository>();
             services.AddScoped<IJWTManagerTokenRepository, JWTManagerTokenRepository>();
             services.AddScoped<IRoundRepository, RoundRepository>();
             services.AddScoped<IGamePlayRepository, GamePlayRepository>();

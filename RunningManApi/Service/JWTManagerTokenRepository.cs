@@ -76,7 +76,7 @@ namespace RunningManApi.Service
                     new Claim ("AccountStatus", account.AccountStatus.ToString()),
 
                 }),
-                Expires = DateTime.UtcNow.AddMinutes(1),
+                Expires = DateTime.UtcNow.AddMinutes(60),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytes), SecurityAlgorithms.HmacSha512Signature)
 
             };
