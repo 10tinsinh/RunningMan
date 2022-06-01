@@ -37,5 +37,19 @@ namespace RunningManApi.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpGet("GetGame")]
+        public IActionResult GetGame(int idGamePlay, int page = 1)
+        {
+            try
+            {
+                var result = _gamePlayRepository.GetGamePlay(idGamePlay, page);
+                return Ok(result);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
     }
 }

@@ -14,6 +14,7 @@ namespace RunningManApi.Service
         private readonly GamePlayDataAccess gamePlayData;
         private readonly GameDataAccess gameData;
         private readonly RoundDataAccess roundData;
+        private readonly DetailRoundDataAccess roundDetailData;
 
         public GamePlayRepository()
         {
@@ -22,6 +23,7 @@ namespace RunningManApi.Service
             gamePlayData = new GamePlayDataAccess();
             gameData = new GameDataAccess();
             roundData = new RoundDataAccess();
+            roundDetailData = new DetailRoundDataAccess();
         }
 
         public GamePlayIdDTO CreateGamePlay(int teamId,int id)
@@ -71,9 +73,37 @@ namespace RunningManApi.Service
             throw new NotImplementedException();
         }
 
-        public List<GamePlayIdDTO> GetGamePlay(string account)
+        public List<GameViewDTO> GetGamePlay(int idGamePlay, int page)
         {
-            throw new NotImplementedException();
+            var gameplay = gamePlayData.GetGamePlay().SingleOrDefault(x => x.Id == idGamePlay);
+            if(gameplay == null)
+            {
+                throw new Exception();
+            }
+            var round = roundData.GetRound().SingleOrDefault(x => x.Id == gameplay.RoundId);
+            var roundDetail = roundDetailData.GetRoundDetail().Where(x => x.RoundId == round.Id);
+
+            #region Paging
+            roundDetail = roundDetail.Skip((page - 1) * 1).Take(1);
+            #endregion
+
+            var AllQuestion = new List<GameViewDTO>();
+            foreach(int idGame in roundDetail.Select(x=>x.GameId))
+            {
+                var game = gameData.GetGames().SingleOrDefault(x => x.Id == idGame);
+                var newquestion = new GameViewDTO
+                {
+                    Name = game.Name,
+                    GameRules = game.GameRules,
+                    Question = game.Question,
+                    Hint1 = game.Hint1,
+                    Hint2 = game.Hint2,
+                    Answer = game.Answer
+                };
+                AllQuestion.Add(newquestion);
+            }
+
+            return AllQuestion.ToList();
         }
 
         public void UpdateGamePlay(int id, GamePlayDTO gamePlayDTO)

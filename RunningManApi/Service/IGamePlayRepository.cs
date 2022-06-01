@@ -8,7 +8,7 @@ namespace RunningManApi.Service
 {
     public interface IGamePlayRepository
     {
-        List<GamePlayIdDTO> GetGamePlay(string account);
+        List<GameViewDTO> GetGamePlay(int idGamePlay, int page);
         GamePlayIdDTO CreateGamePlay(int teamId,int id);
         void UpdateGamePlay(int id, GamePlayDTO gamePlayDTO);
 
