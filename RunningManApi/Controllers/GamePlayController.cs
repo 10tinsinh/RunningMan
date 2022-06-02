@@ -38,12 +38,33 @@ namespace RunningManApi.Controllers
             }
         }
 
+        [Authorize(Policy = PolicyCode.TEAM_MEMBER)]
+        
         [HttpGet("GetGame")]
         public IActionResult GetGame(int idGamePlay, int page = 1)
         {
             try
             {
                 var result = _gamePlayRepository.GetGamePlay(idGamePlay, page);
+                return Ok(result);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [Authorize(Policy = PolicyCode.TEAM_MEMBER)]
+        
+        [HttpPost("AnswerQuestion")]
+        public IActionResult AnswerQuestion(int gameId, string answer)
+        {
+            try
+            {
+
+                var identity = User.Claims.FirstOrDefault(x => x.Type.Equals("Id"));
+                var usernameToken = identity.Value;
+                var result = _gamePlayRepository.AnswerQuestion(gameId, int.Parse(usernameToken), answer);
                 return Ok(result);
             }
             catch

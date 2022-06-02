@@ -23,6 +23,7 @@ namespace RunningManApi.DTO.Models
     }
     public class GameViewDTO
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string GameRules { get; set; }
         public string Question { get; set; }

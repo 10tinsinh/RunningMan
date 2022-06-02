@@ -13,5 +13,8 @@ namespace RunningManApi.Service
         void UpdateGamePlay(int id, GamePlayDTO gamePlayDTO);
 
         void DeleteGamePlay(int id);
+
+        ApiResponse AnswerQuestion(int gameId, int userId, string answer);
+
     }
 }

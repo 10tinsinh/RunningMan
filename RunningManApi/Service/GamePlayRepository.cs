@@ -15,6 +15,7 @@ namespace RunningManApi.Service
         private readonly GameDataAccess gameData;
         private readonly RoundDataAccess roundData;
         private readonly DetailRoundDataAccess roundDetailData;
+        private readonly GameHistoryDataAccess gameHistoryData;
 
         public GamePlayRepository()
         {
@@ -24,6 +25,61 @@ namespace RunningManApi.Service
             gameData = new GameDataAccess();
             roundData = new RoundDataAccess();
             roundDetailData = new DetailRoundDataAccess();
+            gameHistoryData = new GameHistoryDataAccess();
+        }
+
+        public ApiResponse AnswerQuestion(int gameId, int userId, string answer)
+        {
+            if(string.IsNullOrEmpty(answer))
+            {
+                return new ApiResponse
+                {
+                    Success = false,
+                    Message = "Please input your answer!"
+                };
+            }    
+            else
+            {
+                var game = gameData.GetGames().SingleOrDefault(x => x.Id == gameId);
+                if(game == null)
+                {
+                    throw new Exception();
+                }    
+                if(game.Answer == answer)
+                {
+                    var gameHistory = new GameHistoryDTO
+                    {
+                        GameId = gameId,
+                        AccountId = userId
+                    };
+                    var checkgameHistory = gameHistoryData.GetGameHistory().SingleOrDefault(x => x.GameId == gameHistory.GameId && x.AccountId == gameHistory.AccountId);
+                    if(checkgameHistory == null)
+                    {
+                        gameHistoryData.CreateGameHistory(gameHistory);
+                    }    
+                    else
+                    {
+                        int? times = checkgameHistory.Times + 1;
+                        var gameHistoryUpdate = new GameHistoryDTO
+                        {
+                            Times = times
+                        };
+                        gameHistoryData.UpdateGameHistory(checkgameHistory.Id, gameHistoryUpdate);
+                    }    
+
+                    return new ApiResponse
+                    {
+                        Success = true,
+                        Message = "Answer successfully!"
+                    };
+                }
+                return new ApiResponse
+                {
+                    Success = false,
+                    Message = "You Wrong! Please input your answer!"
+                };
+
+            }    
         }
 
         public GamePlayIdDTO CreateGamePlay(int teamId,int id)
@@ -93,6 +149,7 @@ namespace RunningManApi.Service
                 var game = gameData.GetGames().SingleOrDefault(x => x.Id == idGame);
                 var newquestion = new GameViewDTO
                 {
+                    Id = game.Id,
                     Name = game.Name,
                     GameRules = game.GameRules,
                     Question = game.Question,
